@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School ERP - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .sidebar-item:hover { background: rgba(102, 126, 234, 0.1); transform: translateX(5px); }
+        .sidebar-item.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+    </style>
+</head>
+<body class="bg-gray-100">
+<!-- Admin Dashboard Container -->
+<div id="admin-dashboard" class="flex min-h-screen">
+    <!-- Main App -->
+    <div id="mainApp" class="">
+        <!-- Sidebar -->
+        <div class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-40">
+            <div class="p-6 border-b gradient-bg text-white">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-graduation-cap text-purple-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold">School ERP</h1>
+                        <p class="text-sm opacity-90">Admin Panel</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="p-4 space-y-2 overflow-y-auto" style="height: calc(100vh - 140px);">
+                <button onclick="showSection('dashboard')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all active">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="showSection('students')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-user-graduate w-5"></i>
+                    <span>Students</span>
+                </button>
+                <button onclick="showSection('teachers')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-chalkboard-teacher w-5"></i>
+                    <span>Teachers</span>
+                </button>
+                <button onclick="showSection('staff')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-users-cog w-5"></i>
+                    <span>Staff</span>
+                </button>
+                <button onclick="showSection('fees')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-money-bill-wave w-5"></i>
+                    <span>Fees</span>
+                </button>
+                <button onclick="showSection('attendance')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-calendar-check w-5"></i>
+                    <span>Attendance</span>
+                </button>
+                <button onclick="showSection('results')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span>Results</span>
+                </button>
+                <button onclick="showSection('transport')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-bus w-5"></i>
+                    <span>Transport</span>
+                </button>
+            </nav>
+            
+            <div class="absolute bottom-4 left-4 right-4">
+                <button onclick="logout()" class="w-full bg-red-500 text-white py-2 rounded-xl hover:bg-red-600 transition-all">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 id="pageTitle" class="text-2xl font-bold text-gray-800">Dashboard</h2>
+                        <p class="text-gray-600">Welcome back, Admin!</p>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <button class="relative p-2 text-gray-600 hover:text-gray-800 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
+                        </button>
+                        
+                        <div class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center text-white font-bold">
+                            A
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content Area -->
+            <main id="contentArea" class="p-6">
+                <!-- Dashboard Content -->
+                <div id="dashboardContent">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-user-graduate text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">1,247</h3>
+                            <p class="text-gray-600">Total Students</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-chalkboard-teacher text-green-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">87</h3>
+                            <p class="text-gray-600">Teachers</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-money-bill-wave text-purple-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800">₹45.2L</h3>
+                            <p class="text-gray-600">Fee Collection</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">23</h3>
+                            <p class="text-gray-600">Pending Issues</p>
+                        </div>
+                    </div>
+                    </body>
+                    </html>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-white rounded-2xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="showSection('students')" class="p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all">
+                                    <i class="fas fa-user-graduate text-blue-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Students</p>
+                                </button>
+                                <button onclick="showSection('teachers')" class="p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-all">
+                                    <i class="fas fa-chalkboard-teacher text-green-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Teachers</p>
+                                </button>
+                                <button onclick="showSection('fees')" class="p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-all">
+                                    <i class="fas fa-money-bill-wave text-purple-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Fees</p>
+                                </button>
+                                <button onclick="showSection('results')" class="p-4 bg-yellow-50 rounded-xl hover:bg-yellow-100 transition-all">
+                                    <i class="fas fa-chart-line text-yellow-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Results</p>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Activities</h3>
+                            <div class="space-y-3">
+                                <div class="p-3 bg-blue-50 rounded-xl border-l-4 border-blue-500">
+                                    <p class="font-semibold text-blue-800">New Student Admission</p>
+                                    <p class="text-xs text-blue-600">Rahul Kumar admitted to Grade 10A</p>
+                                </div>
+                                <div class="p-3 bg-green-50 rounded-xl border-l-4 border-green-500">
+                                    <p class="font-semibold text-green-800">Fee Payment Received</p>
+                                    <p class="text-xs text-green-600">₹25,000 received from Grade 11B</p>
+                                </div>
+                                <div class="p-3 bg-yellow-50 rounded-xl border-l-4 border-yellow-500">
+                                    <p class="font-semibold text-yellow-800">Results Published</p>
+                                    <p class="text-xs text-yellow-600">Mid-term results for Grade 12</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+            <div class="p-6 border-b gradient-bg text-white flex items-center justify-between">
+                <h3 id="modalTitle" class="text-xl font-bold">Add New</h3>
+                <button onclick="closeModal()" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="modalContent" class="p-6 overflow-y-auto max-h-[70vh]">
+                <!-- Modal content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        const studentsData = [
+            { id: 1, name: 'Akash Singh', class: 'Grade 11A', attendance: 95.2, fees: 'Paid', performance: 85.4, phone: '9876543210' },
+            { id: 2, name: 'Priya Patel', class: 'Grade 11A', attendance: 92.8, fees: 'Pending', performance: 88.7, phone: '9876543211' },
+            { id: 3, name: 'Rahul Sharma', class: 'Grade 11B', attendance: 89.5, fees: 'Paid', performance: 82.1, phone: '9876543212' },
+            { id: 4, name: 'Sneha Gupta', class: 'Grade 11B', attendance: 96.3, fees: 'Paid', performance: 91.2, phone: '9876543213' },
+            { id: 5, name: 'Arjun Kumar', class: 'Grade 12A', attendance: 87.2, fees: 'Pending', performance: 79.8, phone: '9876543214' }
+        ];
+
+        const teachersData = [
+            { id: 1, name: 'Dr. Priya Sharma', subject: 'Mathematics', phone: '9876543220', salary: 65000, status: 'Active', salaryStatus: 'Paid', lastPaid: '15 Dec 2024' },
+            { id: 2, name: 'Mr. Rajesh Kumar', subject: 'Physics', phone: '9876543221', salary: 58000, status: 'Active', salaryStatus: 'Pending', lastPaid: '15 Nov 2024' },
+            { id: 3, name: 'Ms. Anita Singh', subject: 'Chemistry', phone: '9876543222', salary: 62000, status: 'Active', salaryStatus: 'Paid', lastPaid: '15 Dec 2024' },
+            { id: 4, name: 'Mr. Suresh Patel', subject: 'English', phone: '9876543223', salary: 55000, status: 'Inactive', salaryStatus: 'Pending', lastPaid: '15 Oct 2024' },
+            { id: 5, name: 'Ms. Kavita Gupta', subject: 'Biology', phone: '9876543224', salary: 60000, status: 'Active', salaryStatus: 'Pending', lastPaid: '15 Nov 2024' }
+        ];
+
+        const staffData = [
+            { id: 1, name: 'Mr. Ramesh Yadav', position: 'Librarian', phone: '9876543230', salary: 35000, status: 'Active', salaryStatus: 'Paid', lastPaid: '15 Dec 2024' },
+            { id: 2, name: 'Ms. Sunita Devi', position: 'Lab Assistant', phone: '9876543231', salary: 28000, status: 'Active', salaryStatus: 'Pending', lastPaid: '15 Nov 2024' },
+            { id: 3, name: 'Mr. Mohan Singh', position: 'Security Guard', phone: '9876543232', salary: 25000, status: 'Active', salaryStatus: 'Paid', lastPaid: '15 Dec 2024' },
+            { id: 4, name: 'Ms. Geeta Sharma', position: 'Accountant', phone: '9876543233', salary: 45000, status: 'Active', salaryStatus: 'Pending', lastPaid: '15 Nov 2024' },
+            { id: 5, name: 'Mr. Ravi Kumar', position: 'Peon', phone: '9876543234', salary: 20000, status: 'Inactive', salaryStatus: 'Pending', lastPaid: '15 Oct 2024' }
+        ];
+
+        // Login Function
+        function login(event) {
+            event.preventDefault();
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+        }
+
+        // Logout Function
+        // Logout Function
+         function logout() {
+         window.location.href = "index.html"; 
+         }
+
+        // Show Section
+        function showSection(section) {
+            // Update active nav
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const titles = {
+                'dashboard': 'Dashboard',
+                'students': 'Students Management',
+                'teachers': 'Teachers Management',
+                'staff': 'Staff Management',
+                'fees': 'Fees Management',
+                'attendance': 'Attendance Management',
+                'results': 'Results Management',
+                'transport': 'Transport Management'
+            };
+
+            document.getElementById('pageTitle').textContent = titles[section];
+
+            switch(section) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'students':
+                    loadStudents();
+                    break;
+                case 'teachers':
+                    loadTeachers();
+                    break;
+                case 'staff':
+                    loadStaff();
+                    break;
+                case 'fees':
+                    loadFees();
+                    break;
+                case 'attendance':
+                    loadAttendance();
+                    break;
+                case 'results':
+                    loadResults();
+                    break;
+                case 'transport':
+                    loadTransport();
+                    break;
+            }
+        }
+
+        function loadDashboard() {
+            document.getElementById('contentArea').innerHTML = `
+                <div id="dashboardContent">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-user-graduate text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">1,247</h3>
+                            <p class="text-gray-600">Total Students</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-chalkboard-teacher text-green-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">87</h3>
+                            <p class="text-gray-600">Teachers</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-money-bill-wave text-purple-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800">₹45.2L</h3>
+                            <p class="text-gray-600">Fee Collection</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">23</h3>
+                            <p class="text-gray-600">Pending Issues</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-white rounded-2xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="showSection('students')" class="p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all">
+                                    <i class="fas fa-user-graduate text-blue-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Students</p>
+                                </button>
+                                <button onclick="showSection('teachers')" class="p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-all">
+                                    <i class="fas fa-chalkboard-teacher text-green-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Teachers</p>
+                                </button>
+                                <button onclick="showSection('fees')" class="p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-all">
+                                    <i class="fas fa-money-bill-wave text-purple-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Fees</p>
+                                </button>
+                                <button onclick="showSection('results')" class="p-4 bg-yellow-50 rounded-xl hover:bg-yellow-100 transition-all">
+                                    <i class="fas fa-chart-line text-yellow-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Results</p>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Activities</h3>
+                            <div class="space-y-3">
+                                <div class="p-3 bg-blue-50 rounded-xl border-l-4 border-blue-500">
+                                    <p class="font-semibold text-blue-800">New Student Admission</p>
+                                    <p class="text-xs text-blue-600">Rahul Kumar admitted to Grade 10A</p>
+                                </div>
+                                <div class="p-3 bg-green-50 rounded-xl border-l-4 border-green-500">
+                                    <p class="font-semibold text-green-800">Fee Payment Received</p>
+                                    <p class="text-xs text-green-600">₹25,000 received from Grade 11B</p>
+                                </div>
+                                <div class="p-3 bg-yellow-50 rounded-xl border-l-4 border-yellow-500">
+                                    <p class="font-semibold text-yellow-800">Results Published</p>
+                                    <p class="text-xs text-yellow-600">Mid-term results for Grade 12</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadStudents() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Students Management</h3>
+                        <div class="flex space-x-4">
+                            <input type="text" placeholder="Search students..." class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            <button onclick="openAddModal('student')" class="gradient-bg text-white px-4 py-2 rounded-xl hover:opacity-90 transition-all">
+                                <i class="fas fa-plus mr-2"></i>Add Student
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left p-3 font-semibold">Name</th>
+                                    <th class="text-left p-3 font-semibold">Class</th>
+                                    <th class="text-left p-3 font-semibold">Phone</th>
+                                    <th class="text-left p-3 font-semibold">Attendance</th>
+                                    <th class="text-left p-3 font-semibold">Fees</th>
+                                    <th class="text-left p-3 font-semibold">Performance</th>
+                                    <th class="text-left p-3 font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${studentsData.map(student => `
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">${student.name}</td>
+                                        <td class="p-3">${student.class}</td>
+                                        <td class="p-3">${student.phone}</td>
+                                        <td class="p-3">
+                                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${student.attendance >= 90 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                ${student.attendance}%
+                                            </span>
+                                        </td>
+                                        <td class="p-3">
+                                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${student.fees === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                ${student.fees}
+                                            </span>
+                                        </td>
+                                        <td class="p-3">
+                                            <div class="flex items-center space-x-2">
+                                                <div class="w-16 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-purple-600 h-2 rounded-full" style="width: ${student.performance}%"></div>
+                                                </div>
+                                                <span class="text-xs font-semibold">${student.performance}%</span>
+                                            </div>
+                                        </td>
+                                        <td class="p-3">
+                                            <div class="flex space-x-2">
+                                                <button onclick="editStudent(${student.id})" class="text-blue-600 hover:text-blue-800">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button onclick="deleteStudent(${student.id})" class="text-red-600 hover:text-red-800">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadTeachers() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Teachers Management & Salary</h3>
+                        <div class="flex space-x-4">
+                            <input type="text" placeholder="Search teachers..." class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            <button onclick="payAllSalaries('teachers')" class="bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 transition-all">
+                                <i class="fas fa-money-bill-wave mr-2"></i>Pay All Salaries
+                            </button>
+                            <button onclick="openAddModal('teacher')" class="gradient-bg text-white px-4 py-2 rounded-xl hover:opacity-90 transition-all">
+                                <i class="fas fa-plus mr-2"></i>Add Teacher
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-blue-800">Total Teachers</h4>
+                            <p class="text-2xl font-bold text-blue-600">${teachersData.length}</p>
+                        </div>
+                        <div class="bg-green-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-green-800">Monthly Payroll</h4>
+                            <p class="text-2xl font-bold text-green-600">₹${teachersData.reduce((sum, t) => sum + t.salary, 0).toLocaleString()}</p>
+                        </div>
+                        <div class="bg-purple-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-purple-800">Paid This Month</h4>
+                            <p class="text-2xl font-bold text-purple-600">₹${teachersData.filter(t => t.salaryStatus === 'Paid').reduce((sum, t) => sum + t.salary, 0).toLocaleString()}</p>
+                        </div>
+                        <div class="bg-red-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-red-800">Pending Payments</h4>
+                            <p class="text-2xl font-bold text-red-600">₹${teachersData.filter(t => t.salaryStatus === 'Pending').reduce((sum, t) => sum + t.salary, 0).toLocaleString()}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left p-3 font-semibold">Name</th>
+                                    <th class="text-left p-3 font-semibold">Subject</th>
+                                    <th class="text-left p-3 font-semibold">Phone</th>
+                                    <th class="text-left p-3 font-semibold">Monthly Salary</th>
+                                    <th class="text-left p-3 font-semibold">Salary Status</th>
+                                    <th class="text-left p-3 font-semibold">Last Paid</th>
+                                    <th class="text-left p-3 font-semibold">Status</th>
+                                    <th class="text-left p-3 font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${teachersData.map(teacher => `
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">${teacher.name}</td>
+                                        <td class="p-3">${teacher.subject}</td>
+                                        <td class="p-3">${teacher.phone}</td>
+                                        <td class="p-3 font-semibold">₹${teacher.salary.toLocaleString()}</td>
+                                        <td class="p-3">
+                                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${teacher.salaryStatus === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                ${teacher.salaryStatus}
+                                            </span>
+                                        </td>
+                                        <td class="p-3 text-sm text-gray-600">${teacher.lastPaid}</td>
+                                        <td class="p-3">
+                                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${teacher.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                ${teacher.status}
+                                            </span>
+                                        </td>
+                                        <td class="p-3">
+                                            <div class="flex space-x-2">
+                                                <button onclick="paySalary(${teacher.id}, 'teacher')" class="text-green-600 hover:text-green-800" title="Pay Salary">
+                                                    <i class="fas fa-money-bill-wave"></i>
+                                                </button>
+                                                <button onclick="viewSalaryHistory(${teacher.id}, 'teacher')" class="text-purple-600 hover:text-purple-800" title="Salary History">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                                <button onclick="editTeacher(${teacher.id})" class="text-blue-600 hover:text-blue-800" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button onclick="deleteTeacher(${teacher.id})" class="text-red-600 hover:text-red-800" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadStaff() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Non-Teaching Staff Management & Salary</h3>
+                        <div class="flex space-x-4">
+                            <input type="text" placeholder="Search staff..." class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            <button onclick="payAllSalaries('staff')" class="bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 transition-all">
+                                <i class="fas fa-money-bill-wave mr-2"></i>Pay All Salaries
+                            </button>
+                            <button onclick="openAddModal('staff')" class="gradient-bg text-white px-4 py-2 rounded-xl hover:opacity-90 transition-all">
+                                <i class="fas fa-plus mr-2"></i>Add Staff
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-blue-800">Total Staff</h4>
+                            <p class="text-2xl font-bold text-blue-600">${staffData.length}</p>
+                        </div>
+                        <div class="bg-green-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-green-800">Monthly Payroll</h4>
+                            <p class="text-2xl font-bold text-green-600">₹${staffData.reduce((sum, s) => sum + s.salary, 0).toLocaleString()}</p>
+                        </div>
+                        <div class="bg-purple-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-purple-800">Paid This Month</h4>
+                            <p class="text-2xl font-bold text-purple-600">₹${staffData.filter(s => s.salaryStatus === 'Paid').reduce((sum, s) => sum + s.salary, 0).toLocaleString()}</p>
+                        </div>
+                        <div class="bg-red-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-red-800">Pending Payments</h4>
+                            <p class="text-2xl font-bold text-red-600">₹${staffData.filter(s => s.salaryStatus === 'Pending').reduce((sum, s) => sum + s.salary, 0).toLocaleString()}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left p-3 font-semibold">Name</th>
+                                    <th class="text-left p-3 font-semibold">Position</th>
+                                    <th class="text-left p-3 font-semibold">Phone</th>
+                                    <th class="text-left p-3 font-semibold">Monthly Salary</th>
+                                    <th class="text-left p-3 font-semibold">Salary Status</th>
+                                    <th class="text-left p-3 font-semibold">Last Paid</th>
+                                    <th class="text-left p-3 font-semibold">Status</th>
+                                    <th class="text-left p-3 font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${staffData.map(staff => `
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">${staff.name}</td>
+                                        <td class="p-3">${staff.position}</td>
+                                        <td class="p-3">${staff.phone}</td>
+                                        <td class="p-3 font-semibold">₹${staff.salary.toLocaleString()}</td>
+                                        <td class="p-3">
+                                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${staff.salaryStatus === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                ${staff.salaryStatus}
+                                            </span>
+                                        </td>
+                                        <td class="p-3 text-sm text-gray-600">${staff.lastPaid}</td>
+                                        <td class="p-3">
+                                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${staff.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                ${staff.status}
+                                            </span>
+                                        </td>
+                                        <td class="p-3">
+                                            <div class="flex space-x-2">
+                                                <button onclick="paySalary(${staff.id}, 'staff')" class="text-green-600 hover:text-green-800" title="Pay Salary">
+                                                    <i class="fas fa-money-bill-wave"></i>
+                                                </button>
+                                                <button onclick="viewSalaryHistory(${staff.id}, 'staff')" class="text-purple-600 hover:text-purple-800" title="Salary History">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                                <button onclick="editStaff(${staff.id})" class="text-blue-600 hover:text-blue-800" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button onclick="deleteStaff(${staff.id})" class="text-red-600 hover:text-red-800" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadFees() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Fees Management</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-green-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-green-800">Total Collected</h4>
+                            <p class="text-2xl font-bold text-green-600">₹45,20,000</p>
+                        </div>
+                        <div class="bg-red-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-red-800">Pending</h4>
+                            <p class="text-2xl font-bold text-red-600">₹8,50,000</p>
+                        </div>
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-blue-800">This Month</h4>
+                            <p class="text-2xl font-bold text-blue-600">₹12,30,000</p>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left p-3 font-semibold">Student Name</th>
+                                    <th class="text-left p-3 font-semibold">Class</th>
+                                    <th class="text-left p-3 font-semibold">Fee Amount</th>
+                                    <th class="text-left p-3 font-semibold">Paid Amount</th>
+                                    <th class="text-left p-3 font-semibold">Due Amount</th>
+                                    <th class="text-left p-3 font-semibold">Status</th>
+                                    <th class="text-left p-3 font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${studentsData.map(student => `
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">${student.name}</td>
+                                        <td class="p-3">${student.class}</td>
+                                        <td class="p-3">₹50,000</td>
+                                        <td class="p-3">₹${student.fees === 'Paid' ? '50,000' : '25,000'}</td>
+                                        <td class="p-3">₹${student.fees === 'Paid' ? '0' : '25,000'}</td>
+                                        <td class="p-3">
+                                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${student.fees === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                ${student.fees}
+                                            </span>
+                                        </td>
+                                        <td class="p-3">
+                                            <button onclick="collectFee(${student.id})" class="text-green-600 hover:text-green-800">
+                                                <i class="fas fa-money-bill-wave"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadAttendance() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Attendance Management</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <button onclick="loadAttendanceData('students')" class="p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all">
+                            <i class="fas fa-user-graduate text-blue-600 text-2xl mb-2"></i>
+                            <p class="font-semibold text-gray-800">Students Attendance</p>
+                        </button>
+                        <button onclick="loadAttendanceData('teachers')" class="p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-all">
+                            <i class="fas fa-chalkboard-teacher text-green-600 text-2xl mb-2"></i>
+                            <p class="font-semibold text-gray-800">Teachers Attendance</p>
+                        </button>
+                        <button onclick="loadAttendanceData('staff')" class="p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-all">
+                            <i class="fas fa-users-cog text-purple-600 text-2xl mb-2"></i>
+                            <p class="font-semibold text-gray-800">Staff Attendance</p>
+                        </button>
+                    </div>
+                    
+                    <div id="attendanceData">
+                        <p class="text-gray-600 text-center py-8">Select a category above to view attendance data</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadResults() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Results Management</h3>
+                        <div class="flex space-x-4">
+                            <select class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                <option>Select Class</option>
+                                <option>Grade 11A</option>
+                                <option>Grade 11B</option>
+                                <option>Grade 12A</option>
+                            </select>
+                            <button onclick="publishResults()" class="gradient-bg text-white px-4 py-2 rounded-xl hover:opacity-90 transition-all">
+                                <i class="fas fa-upload mr-2"></i>Publish Results
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left p-3 font-semibold">Student Name</th>
+                                    <th class="text-left p-3 font-semibold">Class</th>
+                                    <th class="text-left p-3 font-semibold">Math</th>
+                                    <th class="text-left p-3 font-semibold">Science</th>
+                                    <th class="text-left p-3 font-semibold">English</th>
+                                    <th class="text-left p-3 font-semibold">Total</th>
+                                    <th class="text-left p-3 font-semibold">Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${studentsData.map(student => `
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">${student.name}</td>
+                                        <td class="p-3">${student.class}</td>
+                                        <td class="p-3">${Math.floor(Math.random() * 40) + 60}</td>
+                                        <td class="p-3">${Math.floor(Math.random() * 40) + 60}</td>
+                                        <td class="p-3">${Math.floor(Math.random() * 40) + 60}</td>
+                                        <td class="p-3 font-semibold">${Math.floor(student.performance * 3)}/300</td>
+                                        <td class="p-3">
+                                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${student.performance >= 85 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                                ${student.performance >= 85 ? 'A' : 'B'}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadTransport() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Transport Management</h3>
+                        <button onclick="openAddModal('bus')" class="gradient-bg text-white px-4 py-2 rounded-xl hover:opacity-90 transition-all">
+                            <i class="fas fa-plus mr-2"></i>Add Route
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-blue-800">Total Routes</h4>
+                            <p class="text-2xl font-bold text-blue-600">12</p>
+                        </div>
+                        <div class="bg-green-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-green-800">Active Buses</h4>
+                            <p class="text-2xl font-bold text-green-600">10</p>
+                        </div>
+                        <div class="bg-purple-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-purple-800">Total Students</h4>
+                            <p class="text-2xl font-bold text-purple-600">450</p>
+                        </div>
+                        <div class="bg-yellow-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-yellow-800">Drivers</h4>
+                            <p class="text-2xl font-bold text-yellow-600">12</p>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left p-3 font-semibold">Route Name</th>
+                                    <th class="text-left p-3 font-semibold">Bus Number</th>
+                                    <th class="text-left p-3 font-semibold">Driver</th>
+                                    <th class="text-left p-3 font-semibold">Students</th>
+                                    <th class="text-left p-3 font-semibold">Status</th>
+                                    <th class="text-left p-3 font-semibold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Route A - City Center</td>
+                                    <td class="p-3">DL-01-AB-1234</td>
+                                    <td class="p-3">Mr. Suresh Kumar</td>
+                                    <td class="p-3">35/40</td>
+                                    <td class="p-3">
+                                        <span class="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td class="p-3">
+                                        <div class="flex space-x-2">
+                                            <button class="text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-800">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Route B - Sector 15</td>
+                                    <td class="p-3">DL-01-CD-5678</td>
+                                    <td class="p-3">Mr. Rajesh Singh</td>
+                                    <td class="p-3">42/45</td>
+                                    <td class="p-3">
+                                        <span class="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td class="p-3">
+                                        <div class="flex space-x-2">
+                                            <button class="text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-800">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Modal Functions
+        function openAddModal(type) {
+            document.getElementById('modalTitle').textContent = `Add New ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+            
+            let formContent = '';
+            
+            if (type === 'student') {
+                formContent = `
+                    <form onsubmit="saveStudent(event)" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                <input type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Class</label>
+                                <select required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                    <option>Grade 11A</option>
+                                    <option>Grade 11B</option>
+                                    <option>Grade 12A</option>
+                                    <option>Grade 12B</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                <input type="tel" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                            <textarea rows="3" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"></textarea>
+                        </div>
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" onclick="closeModal()" class="px-6 py-2 border border-gray-300 rounded-xl hover:bg-gray-50">Cancel</button>
+                            <button type="submit" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">Save Student</button>
+                        </div>
+                    </form>
+                `;
+            } else if (type === 'teacher') {
+                formContent = `
+                    <form onsubmit="saveTeacher(event)" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                <input type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                <input type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                <input type="tel" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Salary</label>
+                                <input type="number" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                <select required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                    <option>Active</option>
+                                    <option>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" onclick="closeModal()" class="px-6 py-2 border border-gray-300 rounded-xl hover:bg-gray-50">Cancel</button>
+                            <button type="submit" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">Save Teacher</button>
+                        </div>
+                    </form>
+                `;
+            }
+            
+            document.getElementById('modalContent').innerHTML = formContent;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        // Save Functions
+        function saveStudent(event) {
+            event.preventDefault();
+            alert('Student saved successfully!');
+            closeModal();
+            showSection('students');
+        }
+
+        function saveTeacher(event) {
+            event.preventDefault();
+            alert('Teacher saved successfully!');
+            closeModal();
+            showSection('teachers');
+        }
+
+        // Edit/Delete Functions
+        function editStudent(id) {
+            alert(`Edit student with ID: ${id}`);
+        }
+
+        function deleteStudent(id) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                alert(`Student with ID ${id} deleted successfully!`);
+                showSection('students');
+            }
+        }
+
+        function editTeacher(id) {
+            alert(`Edit teacher with ID: ${id}`);
+        }
+
+        function deleteTeacher(id) {
+            if (confirm('Are you sure you want to delete this teacher?')) {
+                alert(`Teacher with ID ${id} deleted successfully!`);
+                showSection('teachers');
+            }
+        }
+
+        function editStaff(id) {
+            alert(`Edit staff with ID: ${id}`);
+        }
+
+        function deleteStaff(id) {
+            if (confirm('Are you sure you want to delete this staff member?')) {
+                alert(`Staff with ID ${id} deleted successfully!`);
+                showSection('staff');
+            }
+        }
+
+        // Other Functions
+        function collectFee(id) {
+            alert(`Collect fee for student ID: ${id}`);
+        }
+
+        function loadAttendanceData(type) {
+            document.getElementById('attendanceData').innerHTML = `
+                <div class="mt-6">
+                    <h4 class="text-lg font-semibold mb-4">${type.charAt(0).toUpperCase() + type.slice(1)} Attendance</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-green-50 rounded-xl p-4">
+                            <h5 class="font-semibold text-green-800">Present Today</h5>
+                            <p class="text-2xl font-bold text-green-600">${Math.floor(Math.random() * 50) + 150}</p>
+                        </div>
+                        <div class="bg-red-50 rounded-xl p-4">
+                            <h5 class="font-semibold text-red-800">Absent Today</h5>
+                            <p class="text-2xl font-bold text-red-600">${Math.floor(Math.random() * 20) + 10}</p>
+                        </div>
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <h5 class="font-semibold text-blue-800">Attendance Rate</h5>
+                            <p class="text-2xl font-bold text-blue-600">${Math.floor(Math.random() * 10) + 85}%</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function publishResults() {
+            alert('Results published successfully!');
+        }
+
+        // Salary Management Functions
+        function paySalary(id, type) {
+            const data = type === 'teacher' ? teachersData : staffData;
+            const person = data.find(p => p.id === id);
+            
+            if (person && person.salaryStatus === 'Pending') {
+                openPaymentPage([person], type);
+            } else if (person && person.salaryStatus === 'Paid') {
+                alert(`Salary already paid to ${person.name} this month!`);
+            }
+        }
+
+        function payAllSalaries(type) {
+            const data = type === 'teachers' ? teachersData : staffData;
+            const pendingPayments = data.filter(p => p.salaryStatus === 'Pending' && p.status === 'Active');
+            
+            if (pendingPayments.length === 0) {
+                alert('No pending salary payments found!');
+                return;
+            }
+            
+            openPaymentPage(pendingPayments, type);
+        }
+
+        function openPaymentPage(paymentList, type) {
+            const totalAmount = paymentList.reduce((sum, p) => sum + p.salary, 0);
+            const isMultiple = paymentList.length > 1;
+            
+            document.getElementById('modalTitle').textContent = isMultiple ? 
+                `Pay ${paymentList.length} ${type.charAt(0).toUpperCase() + type.slice(1)} Salaries` : 
+                `Pay Salary - ${paymentList[0].name}`;
+            
+            const paymentContent = `
+                <div class="space-y-6">
+                    <!-- Payment Summary -->
+                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">Payment Summary</h4>
+                        <div class="space-y-3">
+                            ${paymentList.map(person => `
+                                <div class="flex justify-between items-center bg-white rounded-lg p-3">
+                                    <div>
+                                        <p class="font-semibold text-gray-800">${person.name}</p>
+                                        <p class="text-sm text-gray-600">${person.subject || person.position}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-green-600">₹${person.salary.toLocaleString()}</p>
+                                        <p class="text-xs text-gray-500">Monthly Salary</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="border-t mt-4 pt-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-gray-800">Total Amount:</span>
+                                <span class="text-2xl font-bold text-green-600">₹${totalAmount.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">Payment Method</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <label class="flex items-center p-4 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-500 cursor-pointer transition-all">
+                                <input type="radio" name="paymentMethod" value="bank" class="mr-3" checked>
+                                <div>
+                                    <i class="fas fa-university text-blue-600 text-xl mb-2"></i>
+                                    <p class="font-semibold">Bank Transfer</p>
+                                    <p class="text-xs text-gray-600">Direct to bank account</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-4 bg-white rounded-lg border-2 border-gray-200 hover:border-green-500 cursor-pointer transition-all">
+                                <input type="radio" name="paymentMethod" value="cash" class="mr-3">
+                                <div>
+                                    <i class="fas fa-money-bill-wave text-green-600 text-xl mb-2"></i>
+                                    <p class="font-semibold">Cash Payment</p>
+                                    <p class="text-xs text-gray-600">Physical cash</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-4 bg-white rounded-lg border-2 border-gray-200 hover:border-purple-500 cursor-pointer transition-all">
+                                <input type="radio" name="paymentMethod" value="cheque" class="mr-3">
+                                <div>
+                                    <i class="fas fa-file-invoice text-purple-600 text-xl mb-2"></i>
+                                    <p class="font-semibold">Cheque</p>
+                                    <p class="text-xs text-gray-600">Bank cheque</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Payment Details -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">Payment Details</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Date</label>
+                                <input type="date" value="${new Date().toISOString().split('T')[0]}" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Reference Number</label>
+                                <input type="text" value="PAY${Date.now().toString().slice(-6)}" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Payment Notes (Optional)</label>
+                            <textarea rows="3" placeholder="Add any notes about this payment..." class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end space-x-4 pt-4 border-t">
+                        <button onclick="closeModal()" class="px-6 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all">
+                            <i class="fas fa-times mr-2"></i>Cancel
+                        </button>
+                        <button onclick="processPayment(${JSON.stringify(paymentList).replace(/"/g, '&quot;')}, '${type}')" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 transition-all">
+                            <i class="fas fa-credit-card mr-2"></i>Process Payment
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalContent').innerHTML = paymentContent;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function processPayment(paymentList, type) {
+            // Show processing animation
+            const processButton = event.target;
+            const originalText = processButton.innerHTML;
+            processButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+            processButton.disabled = true;
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                const currentDate = new Date().toLocaleDateString('en-GB', { 
+                    day: '2-digit', 
+                    month: 'short', 
+                    year: 'numeric' 
+                });
+                
+                // Update payment status
+                paymentList.forEach(person => {
+                    person.salaryStatus = 'Paid';
+                    person.lastPaid = currentDate;
+                });
+                
+                // Show success page
+                showPaymentSuccess(paymentList, type);
+            }, 2000);
+        }
+
+        function showPaymentSuccess(paymentList, type) {
+            const totalAmount = paymentList.reduce((sum, p) => sum + p.salary, 0);
+            const isMultiple = paymentList.length > 1;
+            
+            document.getElementById('modalTitle').textContent = 'Payment Successful!';
+            
+            const successContent = `
+                <div class="text-center space-y-6">
+                    <!-- Success Icon -->
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                        <i class="fas fa-check text-green-600 text-3xl"></i>
+                    </div>
+                    
+                    <!-- Success Message -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Payment Completed!</h3>
+                        <p class="text-gray-600">
+                            ${isMultiple ? 
+                                `Successfully paid salaries to ${paymentList.length} ${type}` : 
+                                `Successfully paid salary to ${paymentList[0].name}`
+                            }
+                        </p>
+                    </div>
+                    
+                    <!-- Payment Summary -->
+                    <div class="bg-green-50 rounded-xl p-6">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Total Amount Paid:</span>
+                                <span class="text-2xl font-bold text-green-600">₹${totalAmount.toLocaleString()}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Payment Date:</span>
+                                <span class="font-semibold">${new Date().toLocaleDateString('en-GB', { 
+                                    day: '2-digit', 
+                                    month: 'short', 
+                                    year: 'numeric' 
+                                })}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Reference:</span>
+                                <span class="font-semibold">PAY${Date.now().toString().slice(-6)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recipients List -->
+                    ${isMultiple ? `
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-gray-800 mb-3">Payment Recipients:</h4>
+                            <div class="space-y-2">
+                                ${paymentList.map(person => `
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span>${person.name}</span>
+                                        <span class="font-semibold text-green-600">₹${person.salary.toLocaleString()}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex justify-center space-x-4 pt-4">
+                        <button onclick="downloadReceipt(${JSON.stringify(paymentList).replace(/"/g, '&quot;')}, '${type}')" class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-all">
+                            <i class="fas fa-download mr-2"></i>Download Receipt
+                        </button>
+                        <button onclick="closeModal(); ${type === 'teacher' ? 'loadTeachers()' : 'loadStaff()'};" class="gradient-bg text-white px-6 py-3 rounded-xl hover:opacity-90 transition-all">
+                            <i class="fas fa-check mr-2"></i>Done
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalContent').innerHTML = successContent;
+        }
+
+        function downloadReceipt(paymentList, type) {
+            const totalAmount = paymentList.reduce((sum, p) => sum + p.salary, 0);
+            const receiptData = {
+                date: new Date().toLocaleDateString('en-GB'),
+                reference: `PAY${Date.now().toString().slice(-6)}`,
+                payments: paymentList,
+                total: totalAmount,
+                type: type
+            };
+            
+            // Simulate receipt download
+            alert(`Receipt downloaded successfully!\nReference: ${receiptData.reference}\nTotal: ₹${totalAmount.toLocaleString()}`);
+        }
+
+        function viewSalaryHistory(id, type) {
+            const data = type === 'teacher' ? teachersData : staffData;
+            const person = data.find(p => p.id === id);
+            
+            if (person) {
+                document.getElementById('modalTitle').textContent = `Salary History - ${person.name}`;
+                
+                const historyContent = `
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-gray-800 mb-2">Current Salary Details</h4>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="text-gray-600">Monthly Salary:</span>
+                                    <span class="font-semibold ml-2">₹${person.salary.toLocaleString()}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-600">Status:</span>
+                                    <span class="ml-2 px-2 py-1 rounded-full text-xs font-semibold ${person.salaryStatus === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                        ${person.salaryStatus}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-600">Last Paid:</span>
+                                    <span class="font-semibold ml-2">${person.lastPaid}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-600">Annual Salary:</span>
+                                    <span class="font-semibold ml-2">₹${(person.salary * 12).toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-blue-800 mb-3">Recent Payment History</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center p-2 bg-white rounded-lg">
+                                    <span class="text-sm">December 2024</span>
+                                    <span class="font-semibold text-green-600">₹${person.salary.toLocaleString()}</span>
+                                    <span class="text-xs text-green-600">Paid</span>
+                                </div>
+                                <div class="flex justify-between items-center p-2 bg-white rounded-lg">
+                                    <span class="text-sm">November 2024</span>
+                                    <span class="font-semibold text-green-600">₹${person.salary.toLocaleString()}</span>
+                                    <span class="text-xs text-green-600">Paid</span>
+                                </div>
+                                <div class="flex justify-between items-center p-2 bg-white rounded-lg">
+                                    <span class="text-sm">October 2024</span>
+                                    <span class="font-semibold text-green-600">₹${person.salary.toLocaleString()}</span>
+                                    <span class="text-xs text-green-600">Paid</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4">
+                            <button onclick="closeModal()" class="px-6 py-2 border border-gray-300 rounded-xl hover:bg-gray-50">Close</button>
+                            ${person.salaryStatus === 'Pending' ? `
+                                <button onclick="paySalary(${id}, '${type}'); closeModal();" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700">
+                                    Pay Now
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('modalContent').innerHTML = historyContent;
+                document.getElementById('modal').classList.remove('hidden');
+            }
+        }
+
+        // Initialize dashboard on load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboard();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'972ac7e185e9a7e0',t:'MTc1NTc4NjEyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
