@@ -1,0 +1,2798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart School ERP - Complete System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* 3D Card Effects */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            perspective: 1000px;
+        }
+        
+        .card-3d:hover {
+            transform: translateY(-15px) rotateX(10deg) rotateY(5deg) scale(1.02);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Smooth Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Glass Morphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        /* Navigation Enhancements */
+        .nav-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Role Selection Enhanced */
+        .role-selector {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .role-selector:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .role-selector.selected {
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Progress Bars */
+        .progress-animated {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+            background-size: 200% 100%;
+            animation: progressFlow 3s linear infinite;
+        }
+        
+        @keyframes progressFlow {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+        
+        /* Sidebar Scrolling */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e0 transparent;
+        }
+        
+        .sidebar-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar-content::-webkit-scrollbar-thumb {
+            background-color: #cbd5e0;
+            border-radius: 3px;
+        }
+        
+        .sidebar-content::-webkit-scrollbar-thumb:hover {
+            background-color: #a0aec0;
+        }
+        
+        /* File Upload Styles */
+        .file-upload-area {
+            transition: all 0.3s ease;
+            border: 2px dashed #d1d5db;
+        }
+        
+        .file-upload-area:hover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        
+        .file-upload-area.dragover {
+            border-color: #1d4ed8;
+            background-color: #dbeafe;
+            transform: scale(1.02);
+        }
+        
+        /* Product Cards */
+        .product-card {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-12px) rotateX(5deg) scale(1.03);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        
+        /* Checkout Steps */
+        .checkout-step {
+            transition: all 0.4s ease;
+        }
+        
+        .checkout-step.active {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .checkout-step.completed {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            border: none;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .fab:hover {
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(-10px) scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+        
+        .profile-dropdown.show {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .profile-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: none;
+            border-right: none;
+            transform: rotate(45deg);
+        }
+        
+        /* Checkout Steps */
+        .checkout-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .checkout-step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: #6b7280;
+            font-weight: bold;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .checkout-step.active {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .checkout-step.completed {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .checkout-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: -1;
+        }
+        
+        .checkout-step.completed:not(:last-child)::after {
+            background: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
+    
+    <!-- Login Screen -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+        <!-- Background Animation -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        </div>
+        
+        <div class="glass rounded-3xl shadow-2xl p-8 w-full max-w-md relative z-10 fade-in-up">
+            <!-- App Logo and Name -->
+            <div class="text-center mb-8">
+                <div class="w-24 h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl">
+                    <svg class="w-14 h-14 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
+                        <path d="M12 7L8 10v4l4 2 4-2v-4l-4-3z" fill="white"/>
+                    </svg>
+                </div>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">Smart School ERP</h1>
+                <p class="text-gray-600 text-lg">Complete School Management System</p>
+            </div>
+            
+            <!-- Role Selector -->
+            <div class="mb-8">
+                <label class="block text-sm font-medium text-gray-700 mb-4">Select Your Role</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="selectRole('student')" class="role-selector role-btn p-5 border-2 border-gray-200 rounded-2xl hover:border-blue-500 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-500 transition-colors">
+                            <i class="fas fa-user-graduate text-blue-600 group-hover:text-white text-lg"></i>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700">Student</span>
+                    </button>
+                    
+                    <button onclick="selectRole('teacher')" class="role-selector role-btn p-5 border-2 border-gray-200 rounded-2xl hover:border-green-500 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-500 transition-colors">
+                            <i class="fas fa-chalkboard-teacher text-green-600 group-hover:text-white text-lg"></i>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700">Teacher</span>
+                    </button>
+                    
+                    <button onclick="selectRole('parent')" class="role-selector role-btn p-5 border-2 border-gray-200 rounded-2xl hover:border-purple-500 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-500 transition-colors">
+                            <i class="fas fa-users text-purple-600 group-hover:text-white text-lg"></i>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700">Parent</span>
+                    </button>
+                    
+                    <button onclick="selectRole('admin')" class="role-selector role-btn p-5 border-2 border-gray-200 rounded-2xl hover:border-orange-500 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-500 transition-colors">
+                            <i class="fas fa-user-shield text-orange-600 group-hover:text-white text-lg"></i>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700">Admin</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Login Form -->
+            <form onsubmit="handleLogin(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Login ID</label>
+                    <input type="text" id="loginId" required class="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all backdrop-blur-sm" placeholder="Enter your ID">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="password" required class="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all backdrop-blur-sm" placeholder="Enter your password">
+                </div>
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Login to Dashboard
+                </button>
+            </form>
+            
+            <div class="mt-8 text-center">
+                <p class="text-sm text-gray-600 mb-2">Demo Credentials:</p>
+                <div class="grid grid-cols-2 gap-2 text-xs text-gray-500">
+                    <p>Student: STU001</p>
+                    <p>Teacher: TEA001</p>
+                    <p>Parent: PAR001</p>
+                    <p>Admin: ADM001</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Application -->
+    <div id="main-app" class="hidden">
+        <!-- Mobile Overlay -->
+        <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden backdrop-blur-sm"></div>
+        
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-80 bg-white shadow-2xl z-50 transition-transform duration-300 ease-in-out">
+            <!-- School Logo Section -->
+            <div class="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-purple-600 flex-shrink-0">
+                <div class="flex items-center space-x-4">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg">
+                        <svg class="w-10 h-10 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6L23 9l-11-6zM18.82 9L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+                        </svg>
+                    </div>
+                    <div class="text-white">
+                        <h1 class="text-xl font-bold">Greenwood High School</h1>
+                        <p class="text-blue-100 text-sm">Excellence in Education</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Profile -->
+            <div class="p-6 border-b border-gray-100 flex-shrink-0">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <div id="user-avatar" class="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                            AS
+                        </div>
+                        <div id="user-role-badge" class="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user-graduate text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 id="user-name" class="font-bold text-gray-800 text-lg">Akash Singh</h3>
+                        <p id="user-details" class="text-sm text-gray-600">Grade 11 - Science</p>
+                        <div class="flex items-center space-x-2 mt-2">
+                            <span id="user-role-text" class="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">Student</span>
+                            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full font-medium">Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scrollable Content -->
+            <div class="sidebar-content">
+                <!-- Navigation Menu -->
+                <nav id="navigation-menu" class="p-4 space-y-2">
+                    <!-- Navigation items will be populated based on role -->
+                </nav>
+            </div>
+            
+            <!-- Logout Button -->
+            <div class="p-4 border-t border-gray-100 flex-shrink-0">
+                <button onclick="logout()" class="w-full flex items-center justify-center space-x-2 p-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="font-semibold">Logout</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div id="main-content" class="transition-all duration-300 md:ml-80">
+            <!-- Top Header -->
+            <header class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 sticky top-0 z-30">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center space-x-4">
+                        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-bars text-gray-600 text-lg"></i>
+                        </button>
+                        <div>
+                            <h2 id="page-title" class="text-2xl font-bold text-gray-800">Dashboard</h2>
+                            <p id="page-subtitle" class="text-sm text-gray-600">Welcome back!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <!-- Search -->
+                        <div class="hidden md:flex items-center space-x-2 bg-gray-100 rounded-full px-4 py-2">
+                            <i class="fas fa-search text-gray-500"></i>
+                            <input type="text" placeholder="Search..." class="bg-transparent outline-none text-sm w-40">
+                        </div>
+                        
+                        <!-- Notifications -->
+                        <button class="relative p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-all">
+                            <i class="fas fa-bell text-lg"></i>
+                            <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">3</span>
+                        </button>
+                        
+                        <!-- Shopping Cart -->
+                        <button id="cart-btn" class="relative p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-all">
+                            <i class="fas fa-shopping-cart text-lg"></i>
+                            <span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-purple-500 text-white text-xs rounded-full flex items-center justify-center">0</span>
+                        </button>
+                        
+                        <!-- Profile -->
+                        <div class="relative">
+                            <button onclick="toggleProfileDropdown()" class="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full p-1 hover:shadow-lg transition-all">
+                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                                    <span id="header-avatar" class="text-blue-600 font-bold text-sm">AS</span>
+                                </div>
+                            </button>
+                            
+                            <!-- Profile Dropdown -->
+                            <div id="profile-dropdown" class="profile-dropdown">
+                                <div class="p-6">
+                                    <!-- Profile Header -->
+                                    <div class="flex items-center space-x-4 mb-6">
+                                        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl">
+                                            <span id="dropdown-avatar">AS</span>
+                                        </div>
+                                        <div>
+                                            <h3 id="dropdown-name" class="font-bold text-gray-800 text-lg">Akash Singh</h3>
+                                            <p id="dropdown-role" class="text-sm text-gray-600">Student</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Profile Details -->
+                                    <div id="profile-details" class="space-y-4 mb-6">
+                                        <!-- Details will be populated based on role -->
+                                    </div>
+                                    
+                                    <!-- Quick Actions -->
+                                    <div class="space-y-3 mb-6">
+                                        <button onclick="showSection('profile')" class="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-xl transition-colors">
+                                            <i class="fas fa-user text-blue-500"></i>
+                                            <span class="font-medium text-gray-700">View Full Profile</span>
+                                        </button>
+                                        <button onclick="showSection('timetable')" class="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-xl transition-colors">
+                                            <i class="fas fa-calendar-alt text-green-500"></i>
+                                            <span class="font-medium text-gray-700">My Schedule</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Logout Button -->
+                                    <button onclick="logout()" class="w-full flex items-center justify-center space-x-2 p-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all font-semibold">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span>Logout</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content Sections -->
+            <div id="content-area" class="p-6">
+                <!-- Content will be loaded here based on navigation -->
+            </div>
+        </div>
+        
+        <!-- Shopping Cart Modal -->
+        <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
+                <div class="p-6 border-b border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-gray-800">Shopping Cart</h3>
+                        <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="cart-items" class="p-6 max-h-60 overflow-y-auto">
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fas fa-shopping-cart text-4xl mb-4"></i>
+                        <p>Your cart is empty</p>
+                    </div>
+                </div>
+                <div class="p-6 border-t border-gray-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="font-bold text-gray-800">Total:</span>
+                        <span id="cart-total" class="font-bold text-purple-600 text-xl">₹0.00</span>
+                    </div>
+                    <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all transform hover:scale-105">
+                        Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Checkout Modal -->
+        <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+                <div class="p-6 border-b border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-2xl font-bold text-gray-800">Checkout</h3>
+                        <button onclick="closeCheckout()" class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6 overflow-y-auto max-h-[70vh]">
+                    <!-- Checkout Progress -->
+                    <div class="checkout-progress mb-8">
+                        <div class="checkout-step active" id="step-1">1</div>
+                        <div class="checkout-step" id="step-2">2</div>
+                        <div class="checkout-step" id="step-3">3</div>
+                        <div class="checkout-step" id="step-4">4</div>
+                    </div>
+                    
+                    <!-- Checkout Content -->
+                    <div id="checkout-content">
+                        <!-- Content will be loaded based on step -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Success Modal -->
+        <div id="payment-success-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full">
+                <div class="p-8 text-center">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-check text-green-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Payment Successful!</h3>
+                    <p class="text-gray-600 mb-6">Your order has been placed successfully.</p>
+                    <div id="order-summary" class="bg-gray-50 rounded-2xl p-4 mb-6">
+                        <!-- Order summary will be populated -->
+                    </div>
+                    <button onclick="closePaymentSuccess()" class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- File Upload Modal -->
+        <div id="file-upload-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full">
+                <div class="p-6 border-b border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-gray-800">Upload File</h3>
+                        <button onclick="closeFileUpload()" class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-600 mb-4">Drag and drop your file here or click to browse</p>
+                        <input type="file" id="file-input" class="hidden" accept=".pdf,.doc,.docx,.jpg,.png">
+                        <button onclick="document.getElementById('file-input').click()" class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors">
+                            Choose File
+                        </button>
+                    </div>
+                    <div id="file-preview" class="mt-4 hidden">
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-file text-blue-600 text-2xl"></i>
+                                <div class="flex-1">
+                                    <p id="file-name" class="font-medium text-gray-800"></p>
+                                    <p id="file-size" class="text-sm text-gray-600"></p>
+                                </div>
+                                <button onclick="removeFile()" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex space-x-3">
+                        <button onclick="closeFileUpload()" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-xl hover:bg-gray-300 transition-colors">
+                            Cancel
+                        </button>
+                        <button onclick="uploadFile()" class="flex-1 bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition-colors">
+                            Upload
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Action Button -->
+        <button class="fab" onclick="showQuickActions()">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+    </div>
+
+    <script>
+        // Global State
+        let currentUser = null;
+        let currentRole = null;
+        let selectedRole = null;
+        let cart = [];
+        let cartTotal = 0;
+        let checkoutStep = 1;
+        let orderData = {};
+        let profileDropdownOpen = false;
+        
+        // Sample Data
+        const users = {
+            'STU001': { 
+                name: 'Akash Singh', 
+                role: 'student', 
+                class: 'Grade 11 - Science', 
+                avatar: 'AS',
+                mobile: '+91 9876543210',
+                email: 'akash.singh@student.greenwood.edu',
+                parentName: 'Rajesh Singh',
+                parentMobile: '+91 9876543212',
+                subjects: ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English'],
+                assignedTeachers: {
+                    'Mathematics': 'Dr. Priya Sharma',
+                    'Physics': 'Prof. Amit Kumar',
+                    'Chemistry': 'Dr. Neha Gupta',
+                    'Biology': 'Ms. Ritu Verma',
+                    'English': 'Mr. David Wilson'
+                },
+                syllabus: {
+                    'Mathematics': 'Algebra, Trigonometry, Calculus',
+                    'Physics': 'Mechanics, Thermodynamics, Optics',
+                    'Chemistry': 'Organic, Inorganic, Physical Chemistry'
+                }
+            },
+            'TEA001': { 
+                name: 'Dr. Priya Sharma', 
+                role: 'teacher', 
+                class: 'Mathematics Teacher', 
+                avatar: 'PS',
+                mobile: '+91 9876543211',
+                email: 'priya.sharma@greenwood.edu',
+                subjects: ['Mathematics', 'Statistics'],
+                teachingClasses: ['Grade 11A', 'Grade 11B', 'Grade 12A'],
+                schedule: {
+                    'Monday': ['09:00-10:00 Grade 11A', '11:30-12:30 Grade 12A'],
+                    'Tuesday': ['10:00-11:00 Grade 11B', '14:00-15:00 Grade 11A'],
+                    'Wednesday': ['09:00-10:00 Grade 11A', '10:00-11:00 Grade 12A']
+                }
+            },
+            'PAR001': { 
+                name: 'Rajesh Kumar', 
+                role: 'parent', 
+                class: 'Parent of Akash Singh', 
+                avatar: 'RK',
+                mobile: '+91 9876543212',
+                email: 'rajesh.kumar@gmail.com',
+                childName: 'Akash Singh',
+                childClass: 'Grade 11 - Science',
+                childId: 'STU001'
+            },
+            'ADM001': { 
+                name: 'Principal Johnson', 
+                role: 'admin', 
+                class: 'School Administrator', 
+                avatar: 'PJ',
+                mobile: '+91 9876543213',
+                email: 'principal@greenwood.edu'
+            }
+        };
+        
+        const schoolShopProducts = [
+            { id: 1, name: 'Mathematics Textbook Grade 11', category: 'books', price: 450, image: 'book', rating: 4.8 },
+            { id: 2, name: 'Physics Textbook Grade 11', category: 'books', price: 520, image: 'book', rating: 4.7 },
+            { id: 3, name: 'School Uniform Shirt', category: 'uniform', price: 650, image: 'tshirt', rating: 4.8 },
+            { id: 4, name: 'School Uniform Trousers', category: 'uniform', price: 850, image: 'tshirt', rating: 4.7 },
+            { id: 5, name: 'Premium Pen Set (Pack of 10)', category: 'stationery', price: 120, image: 'pen', rating: 4.4 },
+            { id: 6, name: 'Pencil Set (Pack of 12)', category: 'stationery', price: 80, image: 'pencil-alt', rating: 4.6 },
+            { id: 7, name: 'Complete Geometry Box Set', category: 'stationery', price: 280, image: 'drafting-compass', rating: 4.8 },
+            { id: 8, name: 'School Backpack', category: 'accessories', price: 1500, image: 'backpack', rating: 4.8 }
+        ];
+        
+        // Role-based Navigation Menus
+        const navigationMenus = {
+            student: [
+                { id: 'dashboard', icon: 'home', label: 'Dashboard' },
+                { id: 'profile', icon: 'user', label: 'My Profile' },
+                { id: 'homework', icon: 'tasks', label: 'Homework', badge: '3' },
+                { id: 'results', icon: 'chart-bar', label: 'Results', badge: '85%' },
+                { id: 'fees', icon: 'credit-card', label: 'Fees' },
+                { id: 'timetable', icon: 'calendar-alt', label: 'Time Table' },
+                { id: 'shop', icon: 'shopping-cart', label: 'School Shop' }
+            ],
+            teacher: [
+                { id: 'dashboard', icon: 'home', label: 'Dashboard' },
+                { id: 'profile', icon: 'user', label: 'My Profile' },
+                { id: 'homework', icon: 'upload', label: 'Homework Management' },
+                { id: 'timetable', icon: 'calendar-alt', label: 'Teaching Schedule' },
+                { id: 'shop', icon: 'shopping-cart', label: 'School Shop' }
+            ],
+            parent: [
+                { id: 'dashboard', icon: 'home', label: 'Dashboard' },
+                { id: 'profile', icon: 'user', label: 'My Profile' },
+                { id: 'homework', icon: 'tasks', label: "Child's Homework" },
+                { id: 'results', icon: 'chart-bar', label: "Child's Results" },
+                { id: 'fees', icon: 'credit-card', label: "Child's Fees" },
+                { id: 'shop', icon: 'shopping-cart', label: 'School Shop' }
+            ],
+            admin: [
+                { id: 'dashboard', icon: 'home', label: 'Admin Dashboard' },
+                { id: 'profile', icon: 'user', label: 'My Profile' },
+                { id: 'shop', icon: 'shopping-cart', label: 'School Shop' }
+            ]
+        };
+        
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+        });
+        
+        function setupEventListeners() {
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+            document.getElementById('mobile-overlay').addEventListener('click', closeMobileMenu);
+            
+            // Cart functionality
+            document.getElementById('cart-btn').addEventListener('click', toggleCart);
+            
+            // File upload
+            document.getElementById('file-input').addEventListener('change', handleFileSelect);
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.relative') && profileDropdownOpen) {
+                    closeProfileDropdown();
+                }
+            });
+        }
+        
+        function selectRole(role) {
+            selectedRole = role;
+            
+            // Update UI to show selected role
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('selected', 'border-blue-500', 'border-green-500', 'border-purple-500', 'border-orange-500');
+                btn.classList.add('border-gray-200');
+            });
+            
+            const selectedBtn = event.target.closest('.role-btn');
+            selectedBtn.classList.add('selected');
+            selectedBtn.classList.remove('border-gray-200');
+            
+            const colors = {
+                student: 'border-blue-500',
+                teacher: 'border-green-500',
+                parent: 'border-purple-500',
+                admin: 'border-orange-500'
+            };
+            
+            selectedBtn.classList.add(colors[role]);
+        }
+        
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const loginId = document.getElementById('loginId').value;
+            const password = document.getElementById('password').value;
+            
+            if (!selectedRole) {
+                alert('Please select a role first');
+                return;
+            }
+            
+            const user = users[loginId];
+            if (!user) {
+                alert('Invalid login credentials');
+                return;
+            }
+            
+            if (user.role !== selectedRole) {
+                alert('Selected role does not match user credentials');
+                return;
+            }
+
+            // Redirect for Teacher & Admin
+            if (selectedRole === "teacher") {
+               window.location.href = "tchr.html";
+                return;
+            } 
+            if (selectedRole === "admin") {
+               window.location.href = "admin.html";
+               return;
+            }
+            
+            // Successful login
+            currentUser = user;
+            currentRole = selectedRole;
+            
+            // Hide login screen and show main app
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            
+            // Initialize user interface
+            initializeUserInterface();
+        }
+        
+        function initializeUserInterface() {
+            // Update user profile in sidebar
+            document.getElementById('user-avatar').textContent = currentUser.avatar;
+            document.getElementById('user-name').textContent = currentUser.name;
+            document.getElementById('user-details').textContent = currentUser.class;
+            document.getElementById('header-avatar').textContent = currentUser.avatar;
+            
+            // Update profile dropdown
+            document.getElementById('dropdown-avatar').textContent = currentUser.avatar;
+            document.getElementById('dropdown-name').textContent = currentUser.name;
+            document.getElementById('dropdown-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
+            
+            // Update role badge and text
+            const roleText = document.getElementById('user-role-text');
+            roleText.textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
+            
+            // Build navigation menu
+            buildNavigationMenu();
+            
+            // Update profile dropdown details
+            updateProfileDropdownDetails();
+            
+            // Load dashboard
+            showSection('dashboard');
+        }
+        
+        function buildNavigationMenu() {
+            const navigationMenu = document.getElementById('navigation-menu');
+            const menuItems = navigationMenus[currentRole];
+            
+            navigationMenu.innerHTML = '';
+            
+            menuItems.forEach(item => {
+                const navItem = document.createElement('a');
+                navItem.href = '#';
+                navItem.className = 'nav-item flex items-center space-x-3 p-4 rounded-xl text-gray-700 font-medium';
+                navItem.onclick = () => showSection(item.id);
+                
+                let badgeHtml = '';
+                if (item.badge) {
+                    badgeHtml = `<span class="ml-auto bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-bold">${item.badge}</span>`;
+                }
+                
+                navItem.innerHTML = `
+                    <i class="fas fa-${item.icon} w-5 text-lg"></i>
+                    <span>${item.label}</span>
+                    ${badgeHtml}
+                `;
+                
+                navigationMenu.appendChild(navItem);
+            });
+        }
+        
+        function showSection(sectionId) {
+            // Update page title
+            const pageTitle = document.getElementById('page-title');
+            const pageSubtitle = document.getElementById('page-subtitle');
+            
+            // Update active navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const activeNavItem = document.querySelector(`[onclick="showSection('${sectionId}')"]`);
+            if (activeNavItem) {
+                activeNavItem.classList.add('active');
+            }
+            
+            // Load section content
+            switch(sectionId) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'profile':
+                    loadProfile();
+                    break;
+                case 'shop':
+                    loadSchoolShop();
+                    break;
+                case 'homework':
+                    loadHomework();
+                    break;
+                case 'results':
+                    loadResults();
+                    break;
+                case 'fees':
+                    loadFees();
+                    break;
+                case 'timetable':
+                    loadTimetable();
+                    break;
+                default:
+                    loadGenericSection(sectionId);
+            }
+            
+            // Close mobile menu if open
+            closeMobileMenu();
+        }
+        
+        function loadDashboard() {
+            document.getElementById('page-title').textContent = `${currentRole.charAt(0).toUpperCase() + currentRole.slice(1)} Dashboard`;
+            document.getElementById('page-subtitle').textContent = `Welcome back, ${currentUser.name}!`;
+            
+            const contentArea = document.getElementById('content-area');
+            
+            contentArea.innerHTML = `
+                <div class="fade-in-up">
+                    <!-- Welcome Banner -->
+                    <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 rounded-3xl p-8 mb-8 text-white relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-32 -mt-32"></div>
+                        <div class="relative z-10">
+                            <h1 class="text-4xl font-bold mb-3">Good Morning, ${currentUser.name}! 🌟</h1>
+                            <p class="text-blue-100 text-xl mb-6">You have 3 assignments due this week and 2 upcoming events.</p>
+                            <div class="flex flex-wrap gap-4">
+                                <button onclick="showSection('homework')" class="glass px-8 py-4 rounded-2xl hover:bg-white/30 transition-all duration-300 font-semibold transform hover:scale-105">
+                                    <i class="fas fa-tasks mr-2"></i>
+                                    View Homework
+                                </button>
+                                <button onclick="showSection('shop')" class="glass px-8 py-4 rounded-2xl hover:bg-white/30 transition-all duration-300 font-semibold transform hover:scale-105">
+                                    <i class="fas fa-shopping-cart mr-2"></i>
+                                    Visit Store
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="card-3d bg-white rounded-3xl p-8 shadow-xl">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center">
+                                    <i class="fas fa-calendar-check text-white text-2xl"></i>
+                                </div>
+                                <span class="text-green-600 text-sm font-bold bg-green-100 px-3 py-1 rounded-full">+2.5%</span>
+                            </div>
+                            <h3 class="text-4xl font-bold text-gray-800 mb-2">95.2%</h3>
+                            <p class="text-gray-600 font-semibold">Attendance Rate</p>
+                            <div class="mt-4 w-full bg-gray-200 rounded-full h-3">
+                                <div class="progress-animated h-3 rounded-full" style="width: 95.2%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-3d bg-white rounded-3xl p-8 shadow-xl">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center">
+                                    <i class="fas fa-tasks text-white text-2xl"></i>
+                                </div>
+                                <span class="text-red-600 text-sm font-bold bg-red-100 px-3 py-1 rounded-full">3 Due</span>
+                            </div>
+                            <h3 class="text-4xl font-bold text-gray-800 mb-2">12</h3>
+                            <p class="text-gray-600 font-semibold">Total Homework</p>
+                        </div>
+                        
+                        <div class="card-3d bg-white rounded-3xl p-8 shadow-xl">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center">
+                                    <i class="fas fa-chart-line text-white text-2xl"></i>
+                                </div>
+                                <span class="text-green-600 text-sm font-bold bg-green-100 px-3 py-1 rounded-full">Excellent</span>
+                            </div>
+                            <h3 class="text-4xl font-bold text-gray-800 mb-2">85.4%</h3>
+                            <p class="text-gray-600 font-semibold">Overall Results</p>
+                        </div>
+                        
+                        <div class="card-3d bg-white rounded-3xl p-8 shadow-xl">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center">
+                                    <i class="fas fa-trophy text-white text-2xl"></i>
+                                </div>
+                                <span class="text-green-600 text-sm font-bold bg-green-100 px-3 py-1 rounded-full">Top 10%</span>
+                            </div>
+                            <h3 class="text-4xl font-bold text-gray-800 mb-2">5th</h3>
+                            <p class="text-gray-600 font-semibold">Class Ranking</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-3xl shadow-xl p-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-8 flex items-center">
+                            <i class="fas fa-clock text-blue-500 mr-4"></i>
+                            Recent Activity
+                        </h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-6 p-6 bg-green-50 rounded-2xl transform hover:scale-105 transition-all duration-300">
+                                <div class="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-check text-white text-lg"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-bold text-gray-800 text-lg">Homework Submitted</p>
+                                    <p class="text-gray-600">Mathematics - Quadratic Equations</p>
+                                    <p class="text-sm text-gray-500 mt-2">2 hours ago</p>
+                                </div>
+                                <span class="px-4 py-2 bg-green-100 text-green-800 text-sm rounded-full font-semibold">Completed</span>
+                            </div>
+                            
+                            <div class="flex items-start space-x-6 p-6 bg-blue-50 rounded-2xl transform hover:scale-105 transition-all duration-300">
+                                <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-star text-white text-lg"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-bold text-gray-800 text-lg">Result Published</p>
+                                    <p class="text-gray-600">Physics Test - 88%</p>
+                                    <p class="text-sm text-gray-500 mt-2">1 day ago</p>
+                                </div>
+                                <span class="px-4 py-2 bg-blue-100 text-blue-800 text-sm rounded-full font-semibold">88%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadProfile() {
+            document.getElementById('page-title').textContent = 'My Profile';
+            document.getElementById('page-subtitle').textContent = 'Manage your personal information';
+            
+            const contentArea = document.getElementById('content-area');
+            const user = currentUser;
+            
+            let profileContent = `
+                <div class="fade-in-up">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Profile Card -->
+                        <div class="lg:col-span-1">
+                            <div class="card-3d bg-white rounded-3xl shadow-xl p-8 text-center">
+                                <div class="relative inline-block mb-6">
+                                    <div class="w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-600 rounded-3xl flex items-center justify-center text-white font-bold text-4xl shadow-2xl">
+                                        ${user.avatar}
+                                    </div>
+                                    <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-green-500 rounded-2xl flex items-center justify-center">
+                                        <i class="fas fa-check text-white"></i>
+                                    </div>
+                                </div>
+                                <h2 class="text-2xl font-bold text-gray-800 mb-2">${user.name}</h2>
+                                <p class="text-gray-600 mb-4">${user.class}</p>
+                                <div class="flex justify-center space-x-2 mb-6">
+                                    <span class="px-4 py-2 bg-blue-100 text-blue-800 text-sm rounded-full font-semibold">${currentRole.charAt(0).toUpperCase() + currentRole.slice(1)}</span>
+                                    <span class="px-4 py-2 bg-green-100 text-green-800 text-sm rounded-full font-semibold">Active</span>
+                                </div>
+                                <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-2xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105">
+                                    <i class="fas fa-edit mr-2"></i>
+                                    Edit Profile
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Details -->
+                        <div class="lg:col-span-2">
+                            <div class="bg-white rounded-3xl shadow-xl p-8">
+                                <h3 class="text-2xl font-bold text-gray-800 mb-8 flex items-center">
+                                    <i class="fas fa-user text-blue-500 mr-4"></i>
+                                    Personal Information
+                                </h3>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                    <div class="p-6 bg-gray-50 rounded-2xl">
+                                        <label class="block text-sm font-semibold text-gray-600 mb-2">Full Name</label>
+                                        <p class="text-lg font-bold text-gray-800">${user.name}</p>
+                                    </div>
+                                    
+                                    <div class="p-6 bg-gray-50 rounded-2xl">
+                                        <label class="block text-sm font-semibold text-gray-600 mb-2">Mobile Number</label>
+                                        <p class="text-lg font-bold text-gray-800">${user.mobile}</p>
+                                    </div>
+                                    
+                                    <div class="p-6 bg-gray-50 rounded-2xl">
+                                        <label class="block text-sm font-semibold text-gray-600 mb-2">Email Address</label>
+                                        <p class="text-lg font-bold text-gray-800">${user.email}</p>
+                                    </div>
+                                    
+                                    <div class="p-6 bg-gray-50 rounded-2xl">
+                                        <label class="block text-sm font-semibold text-gray-600 mb-2">Role</label>
+                                        <p class="text-lg font-bold text-gray-800">${currentRole.charAt(0).toUpperCase() + currentRole.slice(1)}</p>
+                                    </div>
+                                </div>
+            `;
+            
+            // Role-specific information
+            if (currentRole === 'student') {
+                profileContent += `
+                    <div class="border-t border-gray-200 pt-8">
+                        <h4 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-graduation-cap text-blue-500 mr-3"></i>
+                            Academic Information
+                        </h4>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="p-6 bg-blue-50 rounded-2xl">
+                                <label class="block text-sm font-semibold text-gray-600 mb-2">Parent Name</label>
+                                <p class="text-lg font-bold text-gray-800">${user.parentName}</p>
+                            </div>
+                            
+                            <div class="p-6 bg-blue-50 rounded-2xl">
+                                <label class="block text-sm font-semibold text-gray-600 mb-2">Parent Mobile</label>
+                                <p class="text-lg font-bold text-gray-800">${user.parentMobile}</p>
+                            </div>
+                            
+                            <div class="p-6 bg-blue-50 rounded-2xl">
+                                <label class="block text-sm font-semibold text-gray-600 mb-2">Class</label>
+                                <p class="text-lg font-bold text-gray-800">${user.class}</p>
+                            </div>
+                            
+                            <div class="p-6 bg-blue-50 rounded-2xl">
+                                <label class="block text-sm font-semibold text-gray-600 mb-2">Student ID</label>
+                                <p class="text-lg font-bold text-gray-800">STU001</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h5 class="text-lg font-bold text-gray-800 mb-4">Subjects</h5>
+                            <div class="flex flex-wrap gap-3">
+                                ${user.subjects.map(subject => `
+                                    <span class="px-4 py-2 bg-purple-100 text-purple-800 rounded-full font-semibold">${subject}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h5 class="text-lg font-bold text-gray-800 mb-4">Assigned Teachers</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${Object.entries(user.assignedTeachers).map(([subject, teacher]) => `
+                                    <div class="p-4 bg-green-50 rounded-xl">
+                                        <p class="font-semibold text-gray-800">${subject}</p>
+                                        <p class="text-sm text-green-600">${teacher}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h5 class="text-lg font-bold text-gray-800 mb-4">Syllabus Overview</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${Object.entries(user.syllabus).map(([subject, topics]) => `
+                                    <div class="p-4 bg-yellow-50 rounded-xl">
+                                        <p class="font-semibold text-gray-800">${subject}</p>
+                                        <p class="text-sm text-gray-600">${topics}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentRole === 'teacher') {
+                profileContent += `
+                    <div class="border-t border-gray-200 pt-8">
+                        <h4 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-chalkboard-teacher text-green-500 mr-3"></i>
+                            Teaching Information
+                        </h4>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="p-6 bg-green-50 rounded-2xl">
+                                <label class="block text-sm font-semibold text-gray-600 mb-2">Department</label>
+                                <p class="text-lg font-bold text-gray-800">${user.subjects.join(' & ')}</p>
+                            </div>
+                            
+                            <div class="p-6 bg-green-50 rounded-2xl">
+                                <label class="block text-sm font-semibold text-gray-600 mb-2">Employee ID</label>
+                                <p class="text-lg font-bold text-gray-800">TEA001</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h5 class="text-lg font-bold text-gray-800 mb-4">Teaching Classes</h5>
+                            <div class="flex flex-wrap gap-3">
+                                ${user.teachingClasses.map(className => `
+                                    <span class="px-4 py-2 bg-blue-100 text-blue-800 rounded-full font-semibold">${className}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h5 class="text-lg font-bold text-gray-800 mb-4">Weekly Schedule</h5>
+                            <div class="space-y-4">
+                                ${Object.entries(user.schedule).map(([day, classes]) => `
+                                    <div class="p-4 bg-purple-50 rounded-xl">
+                                        <p class="font-semibold text-gray-800 mb-2">${day}</p>
+                                        <div class="space-y-1">
+                                            ${classes.map(classInfo => `
+                                                <p class="text-sm text-purple-600">${classInfo}</p>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (currentRole === 'parent') {
+                profileContent += `
+                    <div class="border-t border-gray-200 pt-8">
+                        <h4 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-users text-purple-500 mr-3"></i>
+                            Child Information
+                        </h4>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="p-6 bg-purple-50 rounded-2xl">
+                                <label class="block text-sm font-semibold text-gray-600 mb-2">Child Name</label>
+                                <p class="text-lg font-bold text-gray-800">${user.childName}</p>
+                            </div>
+                            
+                            <div class="p-6 bg-purple-50 rounded-2xl">
+                                <label class="block text-sm font-semibold text-gray-600 mb-2">Child's Class</label>
+                                <p class="text-lg font-bold text-gray-800">${user.childClass}</p>
+                            </div>
+                            
+                            <div class="p-6 bg-purple-50 rounded-2xl">
+                                <label class="block text-sm font-semibold text-gray-600 mb-2">Student ID</label>
+                                <p class="text-lg font-bold text-gray-800">${user.childId}</p>
+                            </div>
+                            
+                            <div class="p-6 bg-purple-50 rounded-2xl">
+                                <label class="block text-sm font-semibold text-gray-600 mb-2">Relationship</label>
+                                <p class="text-lg font-bold text-gray-800">Parent/Guardian</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            profileContent += `
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            contentArea.innerHTML = profileContent;
+        }
+        
+        function loadTimetable() {
+            document.getElementById('page-title').textContent = 'Time Table';
+            document.getElementById('page-subtitle').textContent = 'Your weekly schedule';
+            
+            const contentArea = document.getElementById('content-area');
+            
+            contentArea.innerHTML = `
+                <div class="fade-in-up">
+                    <div class="bg-white rounded-3xl shadow-xl p-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-8 flex items-center">
+                            <i class="fas fa-calendar-alt text-blue-500 mr-4"></i>
+                            Weekly Time Table - Grade 11 Science
+                        </h3>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="p-4 text-left font-bold text-gray-800 rounded-tl-xl">Time</th>
+                                        <th class="p-4 text-center font-bold text-gray-800">Monday</th>
+                                        <th class="p-4 text-center font-bold text-gray-800">Tuesday</th>
+                                        <th class="p-4 text-center font-bold text-gray-800">Wednesday</th>
+                                        <th class="p-4 text-center font-bold text-gray-800">Thursday</th>
+                                        <th class="p-4 text-center font-bold text-gray-800 rounded-tr-xl">Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-4 font-semibold text-gray-700">09:00 - 10:00</td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-blue-100 text-blue-800 p-3 rounded-xl font-semibold">
+                                                Mathematics<br>
+                                                <small class="text-blue-600">Dr. Priya Sharma</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-green-100 text-green-800 p-3 rounded-xl font-semibold">
+                                                Physics<br>
+                                                <small class="text-green-600">Prof. Amit Kumar</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-purple-100 text-purple-800 p-3 rounded-xl font-semibold">
+                                                Chemistry<br>
+                                                <small class="text-purple-600">Dr. Neha Gupta</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-yellow-100 text-yellow-800 p-3 rounded-xl font-semibold">
+                                                English<br>
+                                                <small class="text-yellow-600">Mr. David Wilson</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-red-100 text-red-800 p-3 rounded-xl font-semibold">
+                                                Biology<br>
+                                                <small class="text-red-600">Ms. Ritu Verma</small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-4 font-semibold text-gray-700">10:00 - 11:00</td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-green-100 text-green-800 p-3 rounded-xl font-semibold">
+                                                Physics<br>
+                                                <small class="text-green-600">Prof. Amit Kumar</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-blue-100 text-blue-800 p-3 rounded-xl font-semibold">
+                                                Mathematics<br>
+                                                <small class="text-blue-600">Dr. Priya Sharma</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-yellow-100 text-yellow-800 p-3 rounded-xl font-semibold">
+                                                English<br>
+                                                <small class="text-yellow-600">Mr. David Wilson</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-red-100 text-red-800 p-3 rounded-xl font-semibold">
+                                                Biology<br>
+                                                <small class="text-red-600">Ms. Ritu Verma</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-purple-100 text-purple-800 p-3 rounded-xl font-semibold">
+                                                Chemistry<br>
+                                                <small class="text-purple-600">Dr. Neha Gupta</small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-4 font-semibold text-gray-700">11:00 - 11:30</td>
+                                        <td colspan="5" class="p-4 text-center">
+                                            <div class="bg-orange-100 text-orange-800 p-3 rounded-xl font-semibold">
+                                                BREAK TIME
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b border-gray-100">
+                                        <td class="p-4 font-semibold text-gray-700">11:30 - 12:30</td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-purple-100 text-purple-800 p-3 rounded-xl font-semibold">
+                                                Chemistry Lab<br>
+                                                <small class="text-purple-600">Dr. Neha Gupta</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-red-100 text-red-800 p-3 rounded-xl font-semibold">
+                                                Biology<br>
+                                                <small class="text-red-600">Ms. Ritu Verma</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-green-100 text-green-800 p-3 rounded-xl font-semibold">
+                                                Physics Lab<br>
+                                                <small class="text-green-600">Prof. Amit Kumar</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-blue-100 text-blue-800 p-3 rounded-xl font-semibold">
+                                                Mathematics<br>
+                                                <small class="text-blue-600">Dr. Priya Sharma</small>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="bg-yellow-100 text-yellow-800 p-3 rounded-xl font-semibold">
+                                                English<br>
+                                                <small class="text-yellow-600">Mr. David Wilson</small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadSchoolShop() {
+            document.getElementById('page-title').textContent = 'School Shop';
+            document.getElementById('page-subtitle').textContent = 'Everything you need for your academic journey';
+            
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <div class="fade-in-up">
+                    <!-- Store Header -->
+                    <div class="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-800 rounded-3xl p-10 mb-8 text-white relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-32 -mt-32"></div>
+                        <div class="relative z-10">
+                            <h1 class="text-4xl font-bold mb-4">🛍️ Greenwood School Store</h1>
+                            <p class="text-purple-100 text-xl mb-6">Everything you need for your academic journey - books, uniforms, stationery & more!</p>
+                            <div class="flex items-center space-x-8">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-truck text-purple-200 text-xl"></i>
+                                    <span class="text-lg">Free delivery on campus</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-shield-alt text-purple-200 text-xl"></i>
+                                    <span class="text-lg">Quality guaranteed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Category Filters -->
+                    <div class="bg-white rounded-3xl shadow-xl p-8 mb-8">
+                        <div class="flex flex-wrap gap-4 mb-8">
+                            <button onclick="filterProducts('all')" class="category-btn active px-8 py-4 bg-purple-600 text-white rounded-2xl font-semibold hover:bg-purple-700 transition-all transform hover:scale-105">
+                                All Items
+                            </button>
+                            <button onclick="filterProducts('books')" class="category-btn px-8 py-4 bg-gray-100 text-gray-700 rounded-2xl font-semibold hover:bg-gray-200 transition-all transform hover:scale-105">
+                                📚 Books
+                            </button>
+                            <button onclick="filterProducts('uniform')" class="category-btn px-8 py-4 bg-gray-100 text-gray-700 rounded-2xl font-semibold hover:bg-gray-200 transition-all transform hover:scale-105">
+                                👔 Uniforms
+                            </button>
+                            <button onclick="filterProducts('stationery')" class="category-btn px-8 py-4 bg-gray-100 text-gray-700 rounded-2xl font-semibold hover:bg-gray-200 transition-all transform hover:scale-105">
+                                ✏️ Stationery
+                            </button>
+                            <button onclick="filterProducts('accessories')" class="category-btn px-8 py-4 bg-gray-100 text-gray-700 rounded-2xl font-semibold hover:bg-gray-200 transition-all transform hover:scale-105">
+                                🎒 Accessories
+                            </button>
+                        </div>
+                        
+                        <!-- Search -->
+                        <div class="relative">
+                            <i class="fas fa-search absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                            <input type="text" placeholder="Search products..." class="w-full pl-16 pr-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg">
+                        </div>
+                    </div>
+                    
+                    <!-- Products Grid -->
+                    <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        ${generateProductCards()}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function generateProductCards() {
+            return schoolShopProducts.map(product => `
+                <div class="product-card bg-white rounded-3xl shadow-xl overflow-hidden" data-category="${product.category}">
+                    <div class="relative">
+                        <div class="h-56 bg-gradient-to-br from-${getProductColor(product.category)}-400 to-${getProductColor(product.category)}-600 flex items-center justify-center">
+                            <i class="fas fa-${product.image} text-white text-5xl"></i>
+                        </div>
+                        <button class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-red-50 transition-colors">
+                            <i class="fas fa-heart text-gray-400 hover:text-red-500"></i>
+                        </button>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="font-bold text-gray-800 mb-3 text-lg">${product.name}</h3>
+                        <div class="flex items-center space-x-2 mb-4">
+                            <div class="flex text-yellow-400 text-lg">
+                                ${generateStars(product.rating)}
+                            </div>
+                            <span class="text-sm text-gray-500">(${Math.floor(Math.random() * 200) + 50} reviews)</span>
+                        </div>
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <span class="text-3xl font-bold text-purple-600">₹${product.price}</span>
+                            </div>
+                            <span class="bg-green-100 text-green-800 px-3 py-2 rounded-full text-sm font-bold">In Stock</span>
+                        </div>
+                        <button onclick="addToCart(${product.id}, '${product.name}', ${product.price})" class="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-4 rounded-2xl font-semibold hover:from-purple-700 hover:to-purple-800 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-cart-plus mr-2"></i>
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function getProductColor(category) {
+            const colors = {
+                books: 'blue',
+                uniform: 'indigo',
+                stationery: 'yellow',
+                accessories: 'teal'
+            };
+            return colors[category] || 'gray';
+        }
+        
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+            let stars = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            
+            const emptyStars = 5 - Math.ceil(rating);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            
+            return stars;
+        }
+        
+        function loadHomework() {
+            document.getElementById('page-title').textContent = currentRole === 'teacher' ? 'Homework Management' : 'Homework';
+            document.getElementById('page-subtitle').textContent = 'Manage assignments and submissions';
+            
+            const contentArea = document.getElementById('content-area');
+            
+            if (currentRole === 'teacher') {
+                contentArea.innerHTML = `
+                    <div class="fade-in-up">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <!-- Upload Homework -->
+                            <div class="lg:col-span-2 bg-white rounded-3xl shadow-xl p-8">
+                                <h3 class="text-2xl font-bold text-gray-800 mb-8 flex items-center">
+                                    <i class="fas fa-upload text-green-500 mr-4"></i>
+                                    Upload New Homework
+                                </h3>
+                                
+                                <form class="space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
+                                            <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                                <option>Mathematics</option>
+                                                <option>Statistics</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">Class</label>
+                                            <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                                <option>Grade 11A</option>
+                                                <option>Grade 11B</option>
+                                                <option>Grade 12B</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Homework Title</label>
+                                        <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Enter homework title">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                                        <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Enter homework description and instructions"></textarea>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">Due Date</label>
+                                            <input type="date" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">Priority</label>
+                                            <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                                <option>Normal</option>
+                                                <option>High</option>
+                                                <option>Urgent</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Attach Files (Optional)</label>
+                                        <button type="button" onclick="openFileUpload()" class="w-full border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-green-500 hover:bg-green-50 transition-all">
+                                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                                            <p class="text-gray-600">Click to upload files or drag and drop</p>
+                                        </button>
+                                    </div>
+                                    
+                                    <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 rounded-2xl font-semibold hover:from-green-700 hover:to-green-800 transition-all transform hover:scale-105">
+                                        <i class="fas fa-paper-plane mr-2"></i>
+                                        Assign Homework
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <!-- Recent Homework -->
+                            <div class="space-y-6">
+                                <div class="bg-white rounded-3xl shadow-xl p-6">
+                                    <h3 class="font-bold text-gray-800 mb-4">Recent Assignments</h3>
+                                    <div class="space-y-3">
+                                        <div class="p-4 bg-blue-50 rounded-xl">
+                                            <p class="font-semibold text-gray-800 text-sm">Quadratic Equations</p>
+                                            <p class="text-xs text-gray-600">Grade 11A - Due: Tomorrow</p>
+                                            <p class="text-xs text-green-600 mt-1">15/30 submitted</p>
+                                        </div>
+                                        <div class="p-4 bg-green-50 rounded-xl">
+                                            <p class="font-semibold text-gray-800 text-sm">Statistics Problems</p>
+                                            <p class="text-xs text-gray-600">Grade 12B - Due: March 20</p>
+                                            <p class="text-xs text-green-600 mt-1">22/25 submitted</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Student/Parent homework view
+                contentArea.innerHTML = `
+                    <div class="fade-in-up">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <!-- Pending Homework -->
+                            <div class="lg:col-span-2 bg-white rounded-3xl shadow-xl p-8">
+                                <h3 class="text-2xl font-bold text-gray-800 mb-8 flex items-center">
+                                    <i class="fas fa-tasks text-red-500 mr-4"></i>
+                                    Pending Homework (3)
+                                </h3>
+                                <div class="space-y-6">
+                                    <div class="border-l-4 border-red-500 bg-red-50 p-6 rounded-r-2xl">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <h4 class="font-bold text-gray-800 text-lg">Mathematics - Quadratic Equations</h4>
+                                            <span class="bg-red-100 text-red-800 px-3 py-2 rounded-full text-sm font-bold">Due Tomorrow</span>
+                                        </div>
+                                        <p class="text-gray-600 mb-4">Solve problems 1-15 from Chapter 4. Show all working steps clearly.</p>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-500">Assigned: March 10, 2024</span>
+                                            <button onclick="openFileUpload()" class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-semibold">
+                                                <i class="fas fa-upload mr-2"></i>
+                                                Submit Work
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border-l-4 border-yellow-500 bg-yellow-50 p-6 rounded-r-2xl">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <h4 class="font-bold text-gray-800 text-lg">Physics - Laws of Motion</h4>
+                                            <span class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-full text-sm font-bold">Due in 3 days</span>
+                                        </div>
+                                        <p class="text-gray-600 mb-4">Write a comprehensive lab report on the experiment conducted in class.</p>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-500">Assigned: March 8, 2024</span>
+                                            <button onclick="openFileUpload()" class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-semibold">
+                                                <i class="fas fa-upload mr-2"></i>
+                                                Submit Work
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border-l-4 border-blue-500 bg-blue-50 p-6 rounded-r-2xl">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <h4 class="font-bold text-gray-800 text-lg">English - Essay Writing</h4>
+                                            <span class="bg-blue-100 text-blue-800 px-3 py-2 rounded-full text-sm font-bold">Due in 5 days</span>
+                                        </div>
+                                        <p class="text-gray-600 mb-4">Write a 500-word essay on "The Impact of Technology on Education".</p>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-500">Assigned: March 6, 2024</span>
+                                            <button onclick="openFileUpload()" class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-semibold">
+                                                <i class="fas fa-upload mr-2"></i>
+                                                Submit Work
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Homework Stats -->
+                            <div class="space-y-6">
+                                <div class="bg-white rounded-3xl shadow-xl p-6">
+                                    <h3 class="font-bold text-gray-800 mb-4">Homework Statistics</h3>
+                                    <div class="space-y-4">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-600">Completed</span>
+                                            <span class="font-bold text-green-600">45</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-600">Pending</span>
+                                            <span class="font-bold text-red-600">3</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-600">Completion Rate</span>
+                                            <span class="font-bold text-blue-600">93.8%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white rounded-3xl shadow-xl p-6">
+                                    <h3 class="font-bold text-gray-800 mb-4">Recent Submissions</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-check-circle text-green-500 text-xl"></i>
+                                            <div>
+                                                <p class="font-semibold text-gray-800">Chemistry Lab Report</p>
+                                                <p class="text-sm text-gray-500">Submitted 2 days ago</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-check-circle text-green-500 text-xl"></i>
+                                            <div>
+                                                <p class="font-semibold text-gray-800">History Assignment</p>
+                                                <p class="text-sm text-gray-500">Submitted 4 days ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function loadResults() {
+            document.getElementById('page-title').textContent = 'Results';
+            document.getElementById('page-subtitle').textContent = 'Academic performance overview';
+            
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <div class="fade-in-up">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Results Overview -->
+                        <div class="lg:col-span-2 bg-white rounded-3xl shadow-xl p-8">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-8 flex items-center">
+                                <i class="fas fa-chart-bar text-blue-500 mr-4"></i>
+                                Academic Results - Term 1, 2024
+                            </h3>
+                            
+                            <div class="space-y-6">
+                                <div class="p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="font-bold text-gray-800 text-lg">Mathematics</h4>
+                                        <span class="text-3xl font-bold text-blue-600">92%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                                        <div class="progress-animated h-4 rounded-full" style="width: 92%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-sm text-gray-600">
+                                        <span>Class Average: 78%</span>
+                                        <span>Grade: A+</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="font-bold text-gray-800 text-lg">Physics</h4>
+                                        <span class="text-3xl font-bold text-green-600">88%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                                        <div class="progress-animated h-4 rounded-full" style="width: 88%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-sm text-gray-600">
+                                        <span>Class Average: 75%</span>
+                                        <span>Grade: A</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="font-bold text-gray-800 text-lg">Chemistry</h4>
+                                        <span class="text-3xl font-bold text-purple-600">85%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                                        <div class="progress-animated h-4 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-sm text-gray-600">
+                                        <span>Class Average: 72%</span>
+                                        <span>Grade: A</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-6 bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="font-bold text-gray-800 text-lg">Biology</h4>
+                                        <span class="text-3xl font-bold text-red-600">82%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                                        <div class="progress-animated h-4 rounded-full" style="width: 82%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-sm text-gray-600">
+                                        <span>Class Average: 70%</span>
+                                        <span>Grade: A</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="font-bold text-gray-800 text-lg">English</h4>
+                                        <span class="text-3xl font-bold text-yellow-600">80%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                                        <div class="progress-animated h-4 rounded-full" style="width: 80%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-sm text-gray-600">
+                                        <span>Class Average: 76%</span>
+                                        <span>Grade: A</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl">
+                                <div class="text-center">
+                                    <h4 class="text-2xl font-bold text-gray-800 mb-2">Overall Percentage</h4>
+                                    <p class="text-5xl font-bold text-indigo-600 mb-4">85.4%</p>
+                                    <div class="flex justify-center space-x-8 text-sm text-gray-600">
+                                        <span>Class Rank: 5th out of 45</span>
+                                        <span>Overall Grade: A</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Performance Summary -->
+                        <div class="space-y-6">
+                            <div class="bg-white rounded-3xl shadow-xl p-6">
+                                <h3 class="font-bold text-gray-800 mb-4">Performance Summary</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Highest Score</span>
+                                        <span class="font-bold text-green-600">92% (Math)</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Lowest Score</span>
+                                        <span class="font-bold text-yellow-600">80% (English)</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Class Rank</span>
+                                        <span class="font-bold text-blue-600">5th</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Improvement</span>
+                                        <span class="font-bold text-green-600">+3.2%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-3xl shadow-xl p-6">
+                                <h3 class="font-bold text-gray-800 mb-4">Subject Strengths</h3>
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-star text-yellow-500"></i>
+                                        <span class="text-gray-700">Mathematics - Excellent</span>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-star text-yellow-500"></i>
+                                        <span class="text-gray-700">Physics - Very Good</span>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-star text-yellow-500"></i>
+                                        <span class="text-gray-700">Chemistry - Good</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-3xl shadow-xl p-6">
+                                <h3 class="font-bold text-gray-800 mb-4">Areas for Improvement</h3>
+                                <div class="space-y-3">
+                                    <div class="p-3 bg-yellow-50 rounded-xl">
+                                        <p class="font-semibold text-gray-800">English</p>
+                                        <p class="text-sm text-gray-600">Focus on essay writing skills</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadFees() {
+            document.getElementById('page-title').textContent = 'Fee Management';
+            document.getElementById('page-subtitle').textContent = 'Manage school fees and payments';
+            
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <div class="fade-in-up">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Fee Structure -->
+                        <div class="lg:col-span-2 bg-white rounded-3xl shadow-xl p-8">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-8 flex items-center">
+                                <i class="fas fa-credit-card text-green-500 mr-4"></i>
+                                Fee Structure - Academic Year 2024-25
+                            </h3>
+                            <div class="space-y-6">
+                                <div class="flex items-center justify-between p-6 bg-green-50 rounded-2xl">
+                                    <div>
+                                        <h4 class="font-bold text-gray-800 text-lg">Tuition Fee (Annual)</h4>
+                                        <p class="text-gray-600">Grade 11 - Science Stream</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-2xl font-bold text-green-600">₹45,000</p>
+                                        <span class="bg-green-100 text-green-800 px-3 py-2 rounded-full text-sm font-bold">Paid</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-6 bg-blue-50 rounded-2xl">
+                                    <div>
+                                        <h4 class="font-bold text-gray-800 text-lg">Development Fee</h4>
+                                        <p class="text-gray-600">Infrastructure & Facilities</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-2xl font-bold text-blue-600">₹8,000</p>
+                                        <span class="bg-green-100 text-green-800 px-3 py-2 rounded-full text-sm font-bold">Paid</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-6 bg-purple-50 rounded-2xl">
+                                    <div>
+                                        <h4 class="font-bold text-gray-800 text-lg">Lab Fee</h4>
+                                        <p class="text-gray-600">Physics, Chemistry & Biology Labs</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-2xl font-bold text-purple-600">₹5,500</p>
+                                        <span class="bg-green-100 text-green-800 px-3 py-2 rounded-full text-sm font-bold">Paid</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-6 bg-yellow-50 rounded-2xl">
+                                    <div>
+                                        <h4 class="font-bold text-gray-800 text-lg">Library Fee</h4>
+                                        <p class="text-gray-600">Books & Digital Resources</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-2xl font-bold text-yellow-600">₹2,000</p>
+                                        <span class="bg-green-100 text-green-800 px-3 py-2 rounded-full text-sm font-bold">Paid</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-6 bg-red-50 rounded-2xl">
+                                    <div>
+                                        <h4 class="font-bold text-gray-800 text-lg">Examination Fee</h4>
+                                        <p class="text-gray-600">Term 2 Examinations</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-2xl font-bold text-red-600">₹1,500</p>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="bg-red-100 text-red-800 px-3 py-2 rounded-full text-sm font-bold">Due March 25</span>
+                                            <button onclick="makePayment(1500, 'Examination Fee')" class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors font-semibold">
+                                                Pay Now
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 p-6 bg-gray-50 rounded-2xl">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-xl font-bold text-gray-800">Total Annual Fee</span>
+                                    <span class="text-3xl font-bold text-blue-600">₹62,000</span>
+                                </div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-gray-600">Amount Paid</span>
+                                    <span class="font-bold text-green-600">₹60,500</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600">Outstanding</span>
+                                    <span class="font-bold text-red-600">₹1,500</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Summary -->
+                        <div class="space-y-6">
+                            <div class="bg-white rounded-3xl shadow-xl p-6">
+                                <h3 class="font-bold text-gray-800 mb-4">Payment Summary</h3>
+                                <div class="text-center mb-6">
+                                    <p class="text-4xl font-bold text-green-600">97.6%</p>
+                                    <p class="text-gray-600">Fees Paid</p>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4 mb-6">
+                                    <div class="progress-animated h-4 rounded-full" style="width: 97.6%"></div>
+                                </div>
+                                <button onclick="makePayment(1500, 'Outstanding Amount')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-2xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105">
+                                    <i class="fas fa-credit-card mr-2"></i>
+                                    Pay Outstanding ₹1,500
+                                </button>
+                            </div>
+                            
+                            <div class="bg-white rounded-3xl shadow-xl p-6">
+                                <h3 class="font-bold text-gray-800 mb-4">Payment History</h3>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between p-3 bg-green-50 rounded-xl">
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Tuition Fee</p>
+                                            <p class="text-sm text-gray-500">Paid on Jan 15, 2024</p>
+                                        </div>
+                                        <span class="text-green-600 font-bold">₹45,000</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-green-50 rounded-xl">
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Development Fee</p>
+                                            <p class="text-sm text-gray-500">Paid on Jan 15, 2024</p>
+                                        </div>
+                                        <span class="text-green-600 font-bold">₹8,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadGenericSection(sectionId) {
+            document.getElementById('page-title').textContent = sectionId.charAt(0).toUpperCase() + sectionId.slice(1);
+            document.getElementById('page-subtitle').textContent = 'Section content';
+            
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <div class="fade-in-up">
+                    <div class="bg-white rounded-3xl shadow-xl p-12 text-center">
+                        <div class="w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-8">
+                            <i class="fas fa-cog text-white text-4xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-6">${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)} Section</h2>
+                        <p class="text-gray-600 text-lg">This section is under development. More features coming soon!</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Utility Functions
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+        }
+        
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.add('hidden');
+        }
+        
+        function toggleCart() {
+            const cartModal = document.getElementById('cart-modal');
+            cartModal.classList.toggle('hidden');
+            updateCartDisplay();
+        }
+        
+        function addToCart(id, name, price) {
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            
+            updateCartCount();
+            showNotification(`${name} added to cart!`, 'success');
+        }
+        
+        function updateCartCount() {
+            const cartCount = document.getElementById('cart-count');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+        
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fas fa-shopping-cart text-4xl mb-4"></i>
+                        <p>Your cart is empty</p>
+                    </div>
+                `;
+                cartTotal.textContent = '₹0.00';
+                return;
+            }
+            
+            let total = 0;
+            cartItems.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                return `
+                    <div class="flex items-center justify-between p-4 border-b border-gray-100">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">${item.name}</h4>
+                            <p class="text-sm text-gray-600">₹${item.price} × ${item.quantity}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="updateCartQuantity(${item.id}, -1)" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300">
+                                <i class="fas fa-minus text-xs"></i>
+                            </button>
+                            <span class="w-8 text-center font-semibold">${item.quantity}</span>
+                            <button onclick="updateCartQuantity(${item.id}, 1)" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            cartTotal.textContent = `₹${total.toFixed(2)}`;
+        }
+        
+        function updateCartQuantity(id, change) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(item => item.id !== id);
+                }
+            }
+            updateCartCount();
+            updateCartDisplay();
+        }
+        
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!', 'error');
+                return;
+            }
+            
+            // Close cart modal and open checkout
+            toggleCart();
+            openCheckoutModal();
+        }
+        
+        function openCheckoutModal() {
+            checkoutStep = 1;
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            updateCheckoutStep();
+        }
+        
+        function closeCheckout() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+            checkoutStep = 1;
+        }
+        
+        function updateCheckoutStep() {
+            // Update progress indicators
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`step-${i}`);
+                step.classList.remove('active', 'completed');
+                
+                if (i < checkoutStep) {
+                    step.classList.add('completed');
+                } else if (i === checkoutStep) {
+                    step.classList.add('active');
+                }
+            }
+            
+            // Load step content
+            const content = document.getElementById('checkout-content');
+            
+            switch(checkoutStep) {
+                case 1:
+                    content.innerHTML = getCartReviewContent();
+                    break;
+                case 2:
+                    content.innerHTML = getShippingDetailsContent();
+                    break;
+                case 3:
+                    content.innerHTML = getPaymentMethodContent();
+                    break;
+                case 4:
+                    content.innerHTML = getOrderConfirmationContent();
+                    break;
+            }
+        }
+        
+        function getCartReviewContent() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            return `
+                <div class="text-center mb-6">
+                    <h4 class="text-xl font-bold text-gray-800">Review Your Order</h4>
+                    <p class="text-gray-600">Please review your items before proceeding</p>
+                </div>
+                
+                <div class="space-y-4 mb-6">
+                    ${cart.map(item => `
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div class="flex-1">
+                                <h5 class="font-semibold text-gray-800">${item.name}</h5>
+                                <p class="text-sm text-gray-600">₹${item.price} × ${item.quantity}</p>
+                            </div>
+                            <span class="font-bold text-purple-600">₹${(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="border-t pt-4 mb-6">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xl font-bold text-gray-800">Total Amount:</span>
+                        <span class="text-2xl font-bold text-purple-600">₹${total.toFixed(2)}</span>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button onclick="closeCheckout()" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-xl hover:bg-gray-300 transition-colors font-semibold">
+                        Back to Cart
+                    </button>
+                    <button onclick="nextCheckoutStep()" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all font-semibold">
+                        Continue to Shipping
+                    </button>
+                </div>
+            `;
+        }
+        
+        function getShippingDetailsContent() {
+            return `
+                <div class="text-center mb-6">
+                    <h4 class="text-xl font-bold text-gray-800">Delivery Details</h4>
+                    <p class="text-gray-600">Where should we deliver your order?</p>
+                </div>
+                
+                <form class="space-y-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                            <input type="text" value="${currentUser.name}" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Mobile Number</label>
+                            <input type="text" value="${currentUser.mobile}" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Delivery Address</label>
+                        <textarea rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your complete address">Greenwood High School Campus, Room ${currentUser.class}</textarea>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-truck text-green-600 text-xl"></i>
+                            <div>
+                                <p class="font-semibold text-green-800">Free Campus Delivery</p>
+                                <p class="text-sm text-green-600">Items will be delivered to your classroom within 2-3 working days</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="flex space-x-4">
+                    <button onclick="prevCheckoutStep()" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-xl hover:bg-gray-300 transition-colors font-semibold">
+                        Back to Review
+                    </button>
+                    <button onclick="nextCheckoutStep()" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all font-semibold">
+                        Continue to Payment
+                    </button>
+                </div>
+            `;
+        }
+        
+        function getPaymentMethodContent() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            return `
+                <div class="text-center mb-6">
+                    <h4 class="text-xl font-bold text-gray-800">Payment Method</h4>
+                    <p class="text-gray-600">Choose your preferred payment method</p>
+                </div>
+                
+                <div class="space-y-4 mb-6">
+                    <div class="border-2 border-blue-500 bg-blue-50 rounded-xl p-4">
+                        <label class="flex items-center space-x-4 cursor-pointer">
+                            <input type="radio" name="payment" value="upi" checked class="w-5 h-5 text-blue-600">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-mobile-alt text-blue-600 text-xl"></i>
+                                <div>
+                                    <p class="font-semibold text-gray-800">UPI Payment</p>
+                                    <p class="text-sm text-gray-600">Pay using Google Pay, PhonePe, Paytm</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="border-2 border-gray-200 rounded-xl p-4">
+                        <label class="flex items-center space-x-4 cursor-pointer">
+                            <input type="radio" name="payment" value="card" class="w-5 h-5 text-blue-600">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-credit-card text-gray-600 text-xl"></i>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Credit/Debit Card</p>
+                                    <p class="text-sm text-gray-600">Visa, Mastercard, RuPay accepted</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="border-2 border-gray-200 rounded-xl p-4">
+                        <label class="flex items-center space-x-4 cursor-pointer">
+                            <input type="radio" name="payment" value="netbanking" class="w-5 h-5 text-blue-600">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-university text-gray-600 text-xl"></i>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Net Banking</p>
+                                    <p class="text-sm text-gray-600">All major banks supported</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-xl mb-6">
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-bold text-gray-800">Amount to Pay:</span>
+                        <span class="text-2xl font-bold text-purple-600">₹${total.toFixed(2)}</span>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button onclick="prevCheckoutStep()" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-xl hover:bg-gray-300 transition-colors font-semibold">
+                        Back to Shipping
+                    </button>
+                    <button onclick="processPayment()" class="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white py-3 rounded-xl hover:from-green-700 hover:to-green-800 transition-all font-semibold">
+                        <i class="fas fa-lock mr-2"></i>
+                        Pay Securely
+                    </button>
+                </div>
+            `;
+        }
+        
+        function nextCheckoutStep() {
+            if (checkoutStep < 4) {
+                checkoutStep++;
+                updateCheckoutStep();
+            }
+        }
+        
+        function prevCheckoutStep() {
+            if (checkoutStep > 1) {
+                checkoutStep--;
+                updateCheckoutStep();
+            }
+        }
+        
+        function processPayment() {
+            // Simulate payment processing
+            showNotification('Processing payment...', 'info');
+            
+            setTimeout(() => {
+                // Generate order data
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                orderData = {
+                    orderId: 'ORD' + Date.now(),
+                    items: [...cart],
+                    total: total,
+                    date: new Date().toLocaleDateString(),
+                    status: 'Confirmed'
+                };
+                
+                // Clear cart
+                cart = [];
+                updateCartCount();
+                
+                // Close checkout and show success
+                closeCheckout();
+                showPaymentSuccess();
+                
+                showNotification('Payment successful! Order placed.', 'success');
+            }, 2000);
+        }
+        
+        function showPaymentSuccess() {
+            const modal = document.getElementById('payment-success-modal');
+            const summary = document.getElementById('order-summary');
+            
+            summary.innerHTML = `
+                <div class="text-left">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-gray-700">Order ID:</span>
+                        <span class="font-bold text-gray-800">${orderData.orderId}</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-gray-700">Total Amount:</span>
+                        <span class="font-bold text-green-600">₹${orderData.total.toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-gray-700">Items:</span>
+                        <span class="font-bold text-gray-800">${orderData.items.length}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-gray-700">Delivery:</span>
+                        <span class="font-bold text-blue-600">2-3 working days</span>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+        
+        function closePaymentSuccess() {
+            document.getElementById('payment-success-modal').classList.add('hidden');
+        }
+        
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profile-dropdown');
+            profileDropdownOpen = !profileDropdownOpen;
+            
+            if (profileDropdownOpen) {
+                dropdown.classList.add('show');
+            } else {
+                dropdown.classList.remove('show');
+            }
+        }
+        
+        function closeProfileDropdown() {
+            const dropdown = document.getElementById('profile-dropdown');
+            dropdown.classList.remove('show');
+            profileDropdownOpen = false;
+        }
+        
+        function updateProfileDropdownDetails() {
+            const detailsContainer = document.getElementById('profile-details');
+            let detailsHTML = '';
+            
+            // Common details
+            detailsHTML += `
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                    <span class="text-sm font-medium text-gray-600">Mobile</span>
+                    <span class="text-sm font-bold text-gray-800">${currentUser.mobile}</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                    <span class="text-sm font-medium text-gray-600">Email</span>
+                    <span class="text-sm font-bold text-gray-800">${currentUser.email}</span>
+                </div>
+            `;
+            
+            // Role-specific details
+            if (currentRole === 'student') {
+                detailsHTML += `
+                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
+                        <span class="text-sm font-medium text-gray-600">Parent</span>
+                        <span class="text-sm font-bold text-gray-800">${currentUser.parentName}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
+                        <span class="text-sm font-medium text-gray-600">Class</span>
+                        <span class="text-sm font-bold text-gray-800">${currentUser.class}</span>
+                    </div>
+                `;
+            } else if (currentRole === 'teacher') {
+                detailsHTML += `
+                    <div class="flex items-center justify-between p-3 bg-green-50 rounded-xl">
+                        <span class="text-sm font-medium text-gray-600">Department</span>
+                        <span class="text-sm font-bold text-gray-800">${currentUser.subjects.join(', ')}</span>
+                    </div>
+                `;
+            } else if (currentRole === 'parent') {
+                detailsHTML += `
+                    <div class="flex items-center justify-between p-3 bg-purple-50 rounded-xl">
+                        <span class="text-sm font-medium text-gray-600">Child</span>
+                        <span class="text-sm font-bold text-gray-800">${currentUser.childName}</span>
+                    </div>
+                `;
+            }
+            
+            detailsContainer.innerHTML = detailsHTML;
+        }
+        
+        function makePayment(amount, description) {
+            // Open payment modal instead of simple confirm
+            openPaymentModal(amount, description);
+        }
+        
+        function openPaymentModal(amount, description) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full">
+                    <div class="p-6 border-b border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-gray-800">Fee Payment</h3>
+                            <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-center mb-6">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-credit-card text-blue-600 text-2xl"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-gray-800 mb-2">${description}</h4>
+                            <p class="text-3xl font-bold text-purple-600">₹${amount.toFixed(2)}</p>
+                        </div>
+                        
+                        <div class="space-y-4 mb-6">
+                            <div class="border-2 border-blue-500 bg-blue-50 rounded-xl p-4">
+                                <label class="flex items-center space-x-4 cursor-pointer">
+                                    <input type="radio" name="fee-payment" value="upi" checked class="w-5 h-5 text-blue-600">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-mobile-alt text-blue-600 text-xl"></i>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">UPI Payment</p>
+                                            <p class="text-sm text-gray-600">Quick & Secure</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <div class="border-2 border-gray-200 rounded-xl p-4">
+                                <label class="flex items-center space-x-4 cursor-pointer">
+                                    <input type="radio" name="fee-payment" value="card" class="w-5 h-5 text-blue-600">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-credit-card text-gray-600 text-xl"></i>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Credit/Debit Card</p>
+                                            <p class="text-sm text-gray-600">All cards accepted</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <div class="border-2 border-gray-200 rounded-xl p-4">
+                                <label class="flex items-center space-x-4 cursor-pointer">
+                                    <input type="radio" name="fee-payment" value="netbanking" class="w-5 h-5 text-blue-600">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-university text-gray-600 text-xl"></i>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Net Banking</p>
+                                            <p class="text-sm text-gray-600">All banks supported</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-xl hover:bg-gray-300 transition-colors font-semibold">
+                                Cancel
+                            </button>
+                            <button onclick="processFeePayment(${amount}, '${description}', this)" class="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white py-3 rounded-xl hover:from-green-700 hover:to-green-800 transition-all font-semibold">
+                                <i class="fas fa-lock mr-2"></i>
+                                Pay Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        function processFeePayment(amount, description, button) {
+            // Show processing state
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                // Close payment modal
+                button.closest('.fixed').remove();
+                
+                // Show success modal
+                showFeePaymentSuccess(amount, description);
+                
+                // Refresh fees section
+                setTimeout(() => {
+                    loadFees();
+                }, 1000);
+            }, 2000);
+        }
+        
+        function showFeePaymentSuccess(amount, description) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full">
+                    <div class="p-8 text-center">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-check text-green-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Payment Successful!</h3>
+                        <p class="text-gray-600 mb-6">Your fee payment has been processed successfully.</p>
+                        
+                        <div class="bg-gray-50 rounded-2xl p-4 mb-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-gray-700">Transaction ID:</span>
+                                <span class="font-bold text-gray-800">TXN${Date.now()}</span>
+                            </div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-gray-700">Amount Paid:</span>
+                                <span class="font-bold text-green-600">₹${amount.toFixed(2)}</span>
+                            </div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-gray-700">Fee Type:</span>
+                                <span class="font-bold text-gray-800">${description}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-gray-700">Date:</span>
+                                <span class="font-bold text-gray-800">${new Date().toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        
+                        <button onclick="this.closest('.fixed').remove()" class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            showNotification(`Payment of ₹${amount} successful!`, 'success');
+        }
+        
+        function openFileUpload() {
+            document.getElementById('file-upload-modal').classList.remove('hidden');
+        }
+        
+        function closeFileUpload() {
+            document.getElementById('file-upload-modal').classList.add('hidden');
+            document.getElementById('file-preview').classList.add('hidden');
+            document.getElementById('file-input').value = '';
+        }
+        
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('file-name').textContent = file.name;
+                document.getElementById('file-size').textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+                document.getElementById('file-preview').classList.remove('hidden');
+            }
+        }
+        
+        function removeFile() {
+            document.getElementById('file-preview').classList.add('hidden');
+            document.getElementById('file-input').value = '';
+        }
+        
+        function uploadFile() {
+            const fileInput = document.getElementById('file-input');
+            if (fileInput.files.length === 0) {
+                showNotification('Please select a file first', 'error');
+                return;
+            }
+            
+            // Simulate file upload
+            showNotification('File uploaded successfully!', 'success');
+            closeFileUpload();
+        }
+        
+        function filterProducts(category) {
+            const products = document.querySelectorAll('.product-card');
+            const buttons = document.querySelectorAll('.category-btn');
+            
+            // Update active button
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'bg-purple-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            
+            event.target.classList.add('active', 'bg-purple-600', 'text-white');
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            
+            // Filter products
+            products.forEach(product => {
+                if (category === 'all' || product.dataset.category === category) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+        
+        function showQuickActions() {
+            const actions = [
+                'Add New Homework',
+                'Upload Assignment',
+                'Check Results',
+                'Pay Fees',
+                'Contact Teacher'
+            ];
+            
+            const action = actions[Math.floor(Math.random() * actions.length)];
+            showNotification(`Quick Action: ${action}`, 'info');
+        }
+        
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg text-white font-semibold transform translate-x-full transition-transform duration-300`;
+            
+            // Set color based on type
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+            
+            notification.classList.add(colors[type] || colors.info);
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        function logout() {
+            // Close profile dropdown if open
+            closeProfileDropdown();
+            
+            if (confirm('Are you sure you want to logout?')) {
+                // Reset state
+                currentUser = null;
+                currentRole = null;
+                selectedRole = null;
+                cart = [];
+                cartTotal = 0;
+                checkoutStep = 1;
+                orderData = {};
+                profileDropdownOpen = false;
+                
+                // Update cart count
+                updateCartCount();
+                
+                // Show login screen
+                document.getElementById('main-app').classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('hidden');
+                
+                // Reset login form
+                document.getElementById('loginId').value = '';
+                document.getElementById('password').value = '';
+                document.querySelectorAll('.role-btn').forEach(btn => {
+                    btn.classList.remove('selected', 'border-blue-500', 'border-green-500', 'border-purple-500', 'border-orange-500');
+                    btn.classList.add('border-gray-200');
+                });
+                
+                showNotification('Logged out successfully', 'success');
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a924a2f6804726',t:'MTc1NDQyNjc3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
