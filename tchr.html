@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School ERP - Teacher Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .sidebar-item:hover { background: rgba(102, 126, 234, 0.1); transform: translateX(5px); }
+        .sidebar-item.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .attendance-btn { transition: all 0.2s ease; }
+        .attendance-btn:hover { transform: scale(1.05); }
+        .notice-card { border-left: 4px solid #667eea; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Main App -->
+    <div id="mainApp" class="">
+        <!-- Sidebar -->
+        <div class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-40">
+            <div class="p-6 border-b gradient-bg text-white">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-chalkboard-teacher text-purple-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold">Teacher Portal</h1>
+                        <p class="text-sm opacity-90" id="teacherName">Dr. Priya Sharma</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="p-4 space-y-2 overflow-y-auto" style="height: calc(100vh - 140px);">
+                <button onclick="showSection('dashboard')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all active">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="showSection('attendance')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-calendar-check w-5"></i>
+                    <span>Attendance</span>
+                </button>
+                <button onclick="showSection('results')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span>Results Upload</span>
+                </button>
+                <button onclick="showSection('ptm')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-users w-5"></i>
+                    <span>PTM Scheduling</span>
+                </button>
+                <button onclick="showSection('notices')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-bullhorn w-5"></i>
+                    <span>Notices</span>
+                </button>
+                <button onclick="showSection('profile')" class="sidebar-item w-full flex items-center space-x-3 p-3 text-left rounded-xl transition-all">
+                    <i class="fas fa-user w-5"></i>
+                    <span>My Profile</span>
+                </button>
+            </nav>
+            
+            <div class="absolute bottom-4 left-4 right-4">
+                <button onclick="logout()" class="w-full bg-red-500 text-white py-2 rounded-xl hover:bg-red-600 transition-all">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 id="pageTitle" class="text-2xl font-bold text-gray-800">Dashboard</h2>
+                        <p class="text-gray-600">Welcome back, Dr. Priya Sharma!</p>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <!-- Notifications -->
+                        <div class="relative">
+                            <button onclick="toggleNotifications()" class="relative p-2 text-gray-600 hover:text-gray-800 rounded-full hover:bg-gray-100 transition-all">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">2</span>
+                            </button>
+                            
+                            <!-- Notifications Dropdown -->
+                            <div id="notificationsDropdown" class="hidden absolute right-0 top-12 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50">
+                                <div class="p-4 border-b border-gray-200">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-semibold text-gray-800">Notifications</h3>
+                                        <button onclick="markAllRead()" class="text-sm text-blue-600 hover:text-blue-800">Mark all read</button>
+                                    </div>
+                                </div>
+                                <div class="max-h-64 overflow-y-auto">
+                                    <div class="p-3 hover:bg-gray-50 border-b border-gray-100">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-medium text-gray-800">New PTM Request</p>
+                                                <p class="text-xs text-gray-600">Parent of Akash Singh requested meeting</p>
+                                                <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 hover:bg-gray-50 border-b border-gray-100">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-medium text-gray-800">Assignment Submission</p>
+                                                <p class="text-xs text-gray-600">Grade 11A - 5 new submissions received</p>
+                                                <p class="text-xs text-gray-400 mt-1">4 hours ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 hover:bg-gray-50">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="w-2 h-2 bg-gray-300 rounded-full mt-2 flex-shrink-0"></div>
+                                            <div class="flex-1">
+                                                <p class="text-sm text-gray-600">System Update</p>
+                                                <p class="text-xs text-gray-500">New features added to teacher portal</p>
+                                                <p class="text-xs text-gray-400 mt-1">1 day ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-3 border-t border-gray-200">
+                                    <button onclick="viewAllNotifications()" class="w-full text-center text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                        View all notifications
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Menu -->
+                        <div class="relative">
+                            <button onclick="toggleProfileMenu()" class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center text-white font-bold hover:opacity-90 transition-all">
+                                PS
+                            </button>
+                            
+                            <!-- Profile Dropdown -->
+                            <div id="profileDropdown" class="hidden absolute right-0 top-12 w-64 bg-white rounded-xl shadow-lg border border-gray-200 z-50">
+                                <div class="p-4 border-b border-gray-200">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center text-white font-bold">
+                                            PS
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-gray-800">${teacherData.name}</p>
+                                            <p class="text-sm text-gray-600">${teacherData.subject} Teacher</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="py-2">
+                                    <button onclick="showSection('profile'); toggleProfileMenu()" class="w-full flex items-center space-x-3 px-4 py-2 text-left hover:bg-gray-50 transition-all">
+                                        <i class="fas fa-user w-4 text-gray-600"></i>
+                                        <span class="text-gray-800">My Profile</span>
+                                    </button>
+                                    <button onclick="showSettings()" class="w-full flex items-center space-x-3 px-4 py-2 text-left hover:bg-gray-50 transition-all">
+                                        <i class="fas fa-cog w-4 text-gray-600"></i>
+                                        <span class="text-gray-800">Settings</span>
+                                    </button>
+                                    <button onclick="showHelp()" class="w-full flex items-center space-x-3 px-4 py-2 text-left hover:bg-gray-50 transition-all">
+                                        <i class="fas fa-question-circle w-4 text-gray-600"></i>
+                                        <span class="text-gray-800">Help & Support</span>
+                                    </button>
+                                    <hr class="my-2">
+                                    <button onclick="logout()" class="w-full flex items-center space-x-3 px-4 py-2 text-left hover:bg-red-50 text-red-600 transition-all">
+                                        <i class="fas fa-sign-out-alt w-4"></i>
+                                        <span>Logout</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content Area -->
+            <main id="contentArea" class="p-6">
+                <!-- Content will be loaded here -->
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div class="p-6 border-b gradient-bg text-white flex items-center justify-between">
+                <h3 id="modalTitle" class="text-xl font-bold">Modal Title</h3>
+                <button onclick="closeModal()" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="modalContent" class="p-6 overflow-y-auto max-h-[70vh]">
+                <!-- Modal content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        const teacherData = {
+            id: 1,
+            name: 'Dr. Priya Sharma',
+            subject: 'Mathematics',
+            classes: ['Grade 11A', 'Grade 11B', 'Grade 12A'],
+            classTeacherOf: 'Grade 11A', // Main class teacher designation
+            email: 'priya.sharma@school.com',
+            phone: '9876543220'
+        };
+
+        let studentsData = {
+            'Grade 11A': [
+                { id: 1, name: 'Akash Singh', rollNo: '11A001', attendance: {} },
+                { id: 2, name: 'Priya Patel', rollNo: '11A002', attendance: {} },
+                { id: 3, name: 'Rahul Sharma', rollNo: '11A003', attendance: {} },
+                { id: 4, name: 'Sneha Gupta', rollNo: '11A004', attendance: {} },
+                { id: 5, name: 'Arjun Kumar', rollNo: '11A005', attendance: {} },
+                { id: 6, name: 'Kavya Singh', rollNo: '11A006', attendance: {} },
+                { id: 7, name: 'Rohit Verma', rollNo: '11A007', attendance: {} },
+                { id: 8, name: 'Anita Yadav', rollNo: '11A008', attendance: {} }
+            ],
+            'Grade 11B': [
+                { id: 9, name: 'Vikram Das', rollNo: '11B001', attendance: {} },
+                { id: 10, name: 'Pooja Kumari', rollNo: '11B002', attendance: {} },
+                { id: 11, name: 'Amit Gupta', rollNo: '11B003', attendance: {} },
+                { id: 12, name: 'Riya Sharma', rollNo: '11B004', attendance: {} },
+                { id: 13, name: 'Deepak Singh', rollNo: '11B005', attendance: {} },
+                { id: 14, name: 'Neha Patel', rollNo: '11B006', attendance: {} }
+            ],
+            'Grade 12A': [
+                { id: 15, name: 'Sanjay Kumar', rollNo: '12A001', attendance: {} },
+                { id: 16, name: 'Meera Singh', rollNo: '12A002', attendance: {} },
+                { id: 17, name: 'Rajesh Yadav', rollNo: '12A003', attendance: {} },
+                { id: 18, name: 'Sunita Devi', rollNo: '12A004', attendance: {} },
+                { id: 19, name: 'Kiran Gupta', rollNo: '12A005', attendance: {} }
+            ]
+        };
+
+        let resultsData = {};
+        let ptmSchedules = [];
+        let noticesData = [];
+
+        // Utility Functions
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        function getCurrentDate() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // Login Function
+        function login(event) {
+            event.preventDefault();
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            loadDashboard();
+        }
+
+        // Logout Function
+           function logout() {
+            window.location.href = "index.html"; 
+        }
+
+
+        // Navigation
+        function showSection(section) {
+            // Update active nav
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const titles = {
+                'dashboard': 'Dashboard',
+                'attendance': 'Attendance Management',
+                'results': 'Results Upload',
+                'ptm': 'PTM Scheduling',
+                'notices': 'Notices & Announcements',
+                'profile': 'My Profile'
+            };
+
+            document.getElementById('pageTitle').textContent = titles[section];
+
+            switch(section) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'attendance':
+                    loadAttendance();
+                    break;
+                case 'results':
+                    loadResults();
+                    break;
+                case 'ptm':
+                    loadPTM();
+                    break;
+                case 'notices':
+                    loadNotices();
+                    break;
+                case 'profile':
+                    loadProfile();
+                    break;
+            }
+        }
+
+        // Dashboard
+        function loadDashboard() {
+            const totalStudents = Object.values(studentsData).flat().length;
+            const todayDate = getCurrentDate();
+            const todayAttendance = Object.values(studentsData).flat().filter(s => s.attendance[todayDate]).length;
+            const upcomingPTMs = ptmSchedules.filter(p => new Date(p.date) >= new Date()).length;
+            const totalNotices = noticesData.length;
+
+            document.getElementById('contentArea').innerHTML = `
+                <div class="space-y-8">
+                    <!-- Welcome Section -->
+                    <div class="gradient-bg rounded-2xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-2xl font-bold mb-2">Welcome back, ${teacherData.name}!</h2>
+                                <p class="opacity-90">Subject: ${teacherData.subject} | Classes: ${teacherData.classes.join(', ')}</p>
+                                <div class="mt-2">
+                                    <span class="bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-star mr-1"></i>Class Teacher: ${teacherData.classTeacherOf}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm opacity-90">Today's Date</p>
+                                <p class="text-xl font-bold">${formatDate(new Date())}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-user-graduate text-blue-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">${totalStudents}</h3>
+                            <p class="text-gray-600">Total Students</p>
+                            <div class="mt-2 text-sm text-blue-600">
+                                <i class="fas fa-users mr-1"></i>Across ${teacherData.classes.length} classes
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-calendar-check text-green-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">${todayAttendance}</h3>
+                            <p class="text-gray-600">Today's Attendance</p>
+                            <div class="mt-2 text-sm text-green-600">
+                                <i class="fas fa-percentage mr-1"></i>${totalStudents > 0 ? Math.round((todayAttendance/totalStudents)*100) : 0}% Present
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-users text-purple-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">${upcomingPTMs}</h3>
+                            <p class="text-gray-600">Upcoming PTMs</p>
+                            <div class="mt-2 text-sm text-purple-600">
+                                <i class="fas fa-calendar mr-1"></i>This month
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover transition-all">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-bullhorn text-yellow-600 text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">${totalNotices}</h3>
+                            <p class="text-gray-600">Notices Sent</p>
+                            <div class="mt-2 text-sm text-yellow-600">
+                                <i class="fas fa-paper-plane mr-1"></i>This month
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions & Recent Activities -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-white rounded-2xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="showSection('attendance')" class="p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all">
+                                    <i class="fas fa-calendar-check text-blue-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Mark Attendance</p>
+                                </button>
+                                <button onclick="showSection('results')" class="p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-all">
+                                    <i class="fas fa-chart-line text-green-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Upload Results</p>
+                                </button>
+                                <button onclick="showSection('ptm')" class="p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-all">
+                                    <i class="fas fa-users text-purple-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Schedule PTM</p>
+                                </button>
+                                <button onclick="showSection('notices')" class="p-4 bg-yellow-50 rounded-xl hover:bg-yellow-100 transition-all">
+                                    <i class="fas fa-bullhorn text-yellow-600 text-2xl mb-2"></i>
+                                    <p class="font-semibold text-gray-800">Send Notice</p>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Activities</h3>
+                            <div class="space-y-3">
+                                <div class="p-3 bg-blue-50 rounded-xl border-l-4 border-blue-500">
+                                    <p class="font-semibold text-blue-800">Attendance Marked</p>
+                                    <p class="text-xs text-blue-600">Grade 11A - Mathematics (Today)</p>
+                                </div>
+                                <div class="p-3 bg-green-50 rounded-xl border-l-4 border-green-500">
+                                    <p class="font-semibold text-green-800">Results Uploaded</p>
+                                    <p class="text-xs text-green-600">Grade 12A - Unit Test 2 (Yesterday)</p>
+                                </div>
+                                <div class="p-3 bg-purple-50 rounded-xl border-l-4 border-purple-500">
+                                    <p class="font-semibold text-purple-800">PTM Scheduled</p>
+                                    <p class="text-xs text-purple-600">Grade 11B - Parent Meeting (2 days ago)</p>
+                                </div>
+                                <div class="p-3 bg-yellow-50 rounded-xl border-l-4 border-yellow-500">
+                                    <p class="font-semibold text-yellow-800">Notice Sent</p>
+                                    <p class="text-xs text-yellow-600">Assignment Deadline - All Classes (3 days ago)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Class Overview -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">My Classes Overview</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            ${teacherData.classes.map(className => {
+                                const classStudents = studentsData[className] || [];
+                                const todayPresent = classStudents.filter(s => s.attendance[todayDate] === 'present').length;
+                                return `
+                                    <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all">
+                                        <div class="flex items-center justify-between mb-3">
+                                            <div class="flex items-center space-x-2">
+                                                <h4 class="font-bold text-gray-800">${className}</h4>
+                                                ${className === teacherData.classTeacherOf ? 
+                                                    '<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-semibold"><i class="fas fa-star mr-1"></i>Class Teacher</span>' : 
+                                                    ''
+                                                }
+                                            </div>
+                                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">
+                                                ${classStudents.length} Students
+                                            </span>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <div class="flex justify-between text-sm">
+                                                <span class="text-gray-600">Today's Attendance:</span>
+                                                <span class="font-semibold">${todayPresent}/${classStudents.length}</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-green-600 h-2 rounded-full" style="width: ${classStudents.length > 0 ? (todayPresent/classStudents.length)*100 : 0}%"></div>
+                                            </div>
+                                        </div>
+                                        <button onclick="markClassAttendance('${className}')" class="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-all text-sm">
+                                            <i class="fas fa-calendar-check mr-1"></i>Mark Attendance
+                                        </button>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Attendance Management
+        function loadAttendance() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="space-y-6">
+                    <!-- Class Selection -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Select Class for Attendance</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${teacherData.classes.map(className => `
+                                <button onclick="showAttendanceForm('${className}')" class="p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all ${className === teacherData.classTeacherOf ? 'border-yellow-300 bg-yellow-50' : ''}">
+                                    <div class="text-center">
+                                        <i class="fas fa-users text-blue-600 text-3xl mb-3"></i>
+                                        <h4 class="font-bold text-gray-800">${className}</h4>
+                                        ${className === teacherData.classTeacherOf ? 
+                                            '<span class="inline-block bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-semibold mb-1"><i class="fas fa-star mr-1"></i>Class Teacher</span>' : 
+                                            ''
+                                        }
+                                        <p class="text-sm text-gray-600">${studentsData[className]?.length || 0} Students</p>
+                                    </div>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Attendance History -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Attendance Records</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left p-3 font-semibold">Date</th>
+                                        <th class="text-left p-3 font-semibold">Class</th>
+                                        <th class="text-left p-3 font-semibold">Present</th>
+                                        <th class="text-left p-3 font-semibold">Absent</th>
+                                        <th class="text-left p-3 font-semibold">Percentage</th>
+                                        <th class="text-left p-3 font-semibold">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendanceHistory">
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">${formatDate(new Date())}</td>
+                                        <td class="p-3">Grade 11A</td>
+                                        <td class="p-3 text-green-600 font-semibold">7</td>
+                                        <td class="p-3 text-red-600 font-semibold">1</td>
+                                        <td class="p-3">
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-semibold">87.5%</span>
+                                        </td>
+                                        <td class="p-3">
+                                            <button onclick="editAttendance('Grade 11A', '${getCurrentDate()}')" class="text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showAttendanceForm(className) {
+            const students = studentsData[className] || [];
+            const today = getCurrentDate();
+            
+            document.getElementById('modalTitle').textContent = `Mark Attendance - ${className}`;
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-blue-50 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-blue-800">${className}</h4>
+                                <p class="text-blue-600">Date: ${formatDate(new Date())}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-blue-600">Total Students</p>
+                                <p class="text-2xl font-bold text-blue-800">${students.length}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 max-h-96 overflow-y-auto">
+                        ${students.map(student => `
+                            <div data-student-id="${student.id}" class="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:bg-gray-50">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 border-2 border-gray-300 rounded-full flex items-center justify-center attendance-indicator" id="indicator_${student.id}">
+                                        ${student.attendance[today] === 'present' ? '<i class="fas fa-check text-green-600 text-lg"></i>' : 
+                                          student.attendance[today] === 'absent' ? '<i class="fas fa-times text-red-600 text-lg"></i>' : 
+                                          '<span class="text-gray-400 text-xs">?</span>'}
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">${student.name}</p>
+                                        <p class="text-sm text-gray-600">Roll No: ${student.rollNo}</p>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="markAttendance(${student.id}, '${className}', 'present')" 
+                                            class="present-btn attendance-btn px-4 py-2 ${student.attendance[today] === 'present' ? 'bg-green-600 ring-2 ring-green-300' : 'bg-green-500'} text-white rounded-lg hover:bg-green-600 transition-all">
+                                        <i class="fas fa-check mr-1"></i>Present
+                                    </button>
+                                    <button onclick="markAttendance(${student.id}, '${className}', 'absent')" 
+                                            class="absent-btn attendance-btn px-4 py-2 ${student.attendance[today] === 'absent' ? 'bg-red-600 ring-2 ring-red-300' : 'bg-red-500'} text-white rounded-lg hover:bg-red-600 transition-all">
+                                        <i class="fas fa-times mr-1"></i>Absent
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="flex justify-between items-center pt-4 border-t">
+                        <div class="text-sm text-gray-600">
+                            <span id="presentCount">0</span> Present, <span id="absentCount">0</span> Absent
+                        </div>
+                        <div class="flex space-x-4">
+                            <button onclick="closeModal()" class="px-6 py-2 border border-gray-300 rounded-xl hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button onclick="saveAttendance('${className}')" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">
+                                <i class="fas fa-save mr-2"></i>Save Attendance
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modal').classList.remove('hidden');
+            updateAttendanceCount(className);
+        }
+
+        function markAttendance(studentId, className, status) {
+            const today = getCurrentDate();
+            const students = studentsData[className];
+            const student = students.find(s => s.id === studentId);
+            
+            if (student) {
+                student.attendance[today] = status;
+                updateAttendanceCount(className);
+                
+                // Update button states - find buttons for this specific student
+                const studentRow = document.querySelector(`[data-student-id="${studentId}"]`);
+                if (studentRow) {
+                    const presentBtn = studentRow.querySelector('.present-btn');
+                    const absentBtn = studentRow.querySelector('.absent-btn');
+                    const indicator = document.getElementById(`indicator_${studentId}`);
+                    
+                    // Remove active states from both buttons
+                    presentBtn.classList.remove('ring-2', 'ring-green-300', 'bg-green-600');
+                    absentBtn.classList.remove('ring-2', 'ring-red-300', 'bg-red-600');
+                    presentBtn.classList.add('bg-green-500');
+                    absentBtn.classList.add('bg-red-500');
+                    
+                    // Update indicator and button states
+                    if (status === 'present') {
+                        presentBtn.classList.add('ring-2', 'ring-green-300', 'bg-green-600');
+                        presentBtn.classList.remove('bg-green-500');
+                        indicator.innerHTML = '<i class="fas fa-check text-green-600 text-lg"></i>';
+                        indicator.classList.remove('border-gray-300', 'border-red-300');
+                        indicator.classList.add('border-green-300');
+                    } else {
+                        absentBtn.classList.add('ring-2', 'ring-red-300', 'bg-red-600');
+                        absentBtn.classList.remove('bg-red-500');
+                        indicator.innerHTML = '<i class="fas fa-times text-red-600 text-lg"></i>';
+                        indicator.classList.remove('border-gray-300', 'border-green-300');
+                        indicator.classList.add('border-red-300');
+                    }
+                }
+            }
+        }
+
+        function updateAttendanceCount(className) {
+            const today = getCurrentDate();
+            const students = studentsData[className];
+            const present = students.filter(s => s.attendance[today] === 'present').length;
+            const absent = students.filter(s => s.attendance[today] === 'absent').length;
+            
+            const presentEl = document.getElementById('presentCount');
+            const absentEl = document.getElementById('absentCount');
+            
+            if (presentEl) presentEl.textContent = present;
+            if (absentEl) absentEl.textContent = absent;
+        }
+
+        function saveAttendance(className) {
+            alert(`Attendance saved successfully for ${className}!`);
+            closeModal();
+            loadAttendance();
+        }
+
+        function markClassAttendance(className) {
+            showAttendanceForm(className);
+        }
+
+        // Results Upload
+        function loadResults() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="space-y-6">
+                    <!-- Upload Form -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">Upload Results</h3>
+                        
+                        <form onsubmit="showResultsForm(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Class</label>
+                                    <select name="class" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                        <option value="">Choose Class</option>
+                                        ${teacherData.classes.map(cls => `<option value="${cls}">${cls}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                    <input type="text" name="subject" value="${teacherData.subject}" readonly class="w-full px-4 py-2 border border-gray-300 rounded-xl bg-gray-50">
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Exam Type</label>
+                                    <select name="examType" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                        <option value="">Select Exam Type</option>
+                                        <option value="Unit Test 1">Unit Test 1</option>
+                                        <option value="Unit Test 2">Unit Test 2</option>
+                                        <option value="Mid Term">Mid Term Exam</option>
+                                        <option value="Final Term">Final Term Exam</option>
+                                        <option value="Assignment">Assignment</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Maximum Marks</label>
+                                    <input type="number" name="maxMarks" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500" placeholder="100">
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end">
+                                <button type="submit" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">
+                                    <i class="fas fa-arrow-right mr-2"></i>Proceed to Enter Marks
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Recent Results -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Results Uploaded</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left p-3 font-semibold">Date</th>
+                                        <th class="text-left p-3 font-semibold">Class</th>
+                                        <th class="text-left p-3 font-semibold">Subject</th>
+                                        <th class="text-left p-3 font-semibold">Exam Type</th>
+                                        <th class="text-left p-3 font-semibold">Students</th>
+                                        <th class="text-left p-3 font-semibold">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">${formatDate(new Date())}</td>
+                                        <td class="p-3">Grade 11A</td>
+                                        <td class="p-3">Mathematics</td>
+                                        <td class="p-3">Unit Test 2</td>
+                                        <td class="p-3">8 Students</td>
+                                        <td class="p-3">
+                                            <button onclick="viewResults('Grade 11A', 'Unit Test 2')" class="text-blue-600 hover:text-blue-800 mr-2">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button onclick="editResults('Grade 11A', 'Unit Test 2')" class="text-green-600 hover:text-green-800">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showResultsForm(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const className = formData.get('class');
+            const subject = formData.get('subject');
+            const examType = formData.get('examType');
+            const maxMarks = formData.get('maxMarks');
+            
+            const students = studentsData[className] || [];
+            
+            document.getElementById('modalTitle').textContent = `Enter Marks - ${className}`;
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-purple-50 rounded-xl p-4">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <p class="text-purple-600">Class:</p>
+                                <p class="font-semibold text-purple-800">${className}</p>
+                            </div>
+                            <div>
+                                <p class="text-purple-600">Subject:</p>
+                                <p class="font-semibold text-purple-800">${subject}</p>
+                            </div>
+                            <div>
+                                <p class="text-purple-600">Exam:</p>
+                                <p class="font-semibold text-purple-800">${examType}</p>
+                            </div>
+                            <div>
+                                <p class="text-purple-600">Max Marks:</p>
+                                <p class="font-semibold text-purple-800">${maxMarks}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 max-h-96 overflow-y-auto">
+                        ${students.map(student => `
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
+                                <div>
+                                    <p class="font-semibold text-gray-800">${student.name}</p>
+                                    <p class="text-sm text-gray-600">Roll No: ${student.rollNo}</p>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex items-center space-x-2">
+                                        <label class="text-sm text-gray-600">Marks:</label>
+                                        <input type="number" id="marks_${student.id}" min="0" max="${maxMarks}" 
+                                               class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500"
+                                               placeholder="0">
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <label class="text-sm text-gray-600">Grade:</label>
+                                        <select id="grade_${student.id}" class="px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500">
+                                            <option value="">-</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A">A</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B">B</option>
+                                            <option value="C+">C+</option>
+                                            <option value="C">C</option>
+                                            <option value="D">D</option>
+                                            <option value="F">F</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="flex justify-end space-x-4 pt-4 border-t">
+                        <button onclick="closeModal()" class="px-6 py-2 border border-gray-300 rounded-xl hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button onclick="saveResults('${className}', '${subject}', '${examType}', ${maxMarks})" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">
+                            <i class="fas fa-save mr-2"></i>Save Results
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function saveResults(className, subject, examType, maxMarks) {
+            const students = studentsData[className];
+            const results = [];
+            
+            students.forEach(student => {
+                const marks = document.getElementById(`marks_${student.id}`).value;
+                const grade = document.getElementById(`grade_${student.id}`).value;
+                
+                if (marks || grade) {
+                    results.push({
+                        studentId: student.id,
+                        studentName: student.name,
+                        rollNo: student.rollNo,
+                        marks: marks || 0,
+                        grade: grade || 'N/A'
+                    });
+                }
+            });
+            
+            // Save to results data
+            const resultKey = `${className}_${subject}_${examType}`;
+            resultsData[resultKey] = {
+                className,
+                subject,
+                examType,
+                maxMarks,
+                date: new Date().toISOString(),
+                results
+            };
+            
+            alert(`Results saved successfully for ${className} - ${examType}!`);
+            closeModal();
+            loadResults();
+        }
+
+        // PTM Scheduling
+        function loadPTM() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="space-y-6">
+                    <!-- Create PTM Schedule -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">Schedule Parent-Teacher Meeting</h3>
+                        
+                        <form onsubmit="schedulePTM(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Class</label>
+                                    <select name="class" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                        <option value="">Choose Class</option>
+                                        ${teacherData.classes.map(cls => `<option value="${cls}">${cls}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Meeting Date</label>
+                                    <input type="date" name="date" required min="${getCurrentDate()}" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Start Time</label>
+                                    <input type="time" name="startTime" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">End Time</label>
+                                    <input type="time" name="endTime" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Meeting Purpose</label>
+                                <textarea name="purpose" rows="3" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500" placeholder="Describe the purpose of this PTM..."></textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Meeting Location</label>
+                                <input type="text" name="location" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500" placeholder="e.g., Classroom 11A, School Hall">
+                            </div>
+                            
+                            <div class="flex justify-end">
+                                <button type="submit" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">
+                                    <i class="fas fa-calendar-plus mr-2"></i>Schedule PTM
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Scheduled PTMs -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-gray-800">Scheduled PTMs</h3>
+                            <div class="flex space-x-2">
+                                <button onclick="filterPTMs('upcoming')" class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-all">
+                                    Upcoming
+                                </button>
+                                <button onclick="filterPTMs('past')" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-all">
+                                    Past
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="ptmList" class="space-y-4">
+                            ${ptmSchedules.length === 0 ? `
+                                <div class="text-center py-8 text-gray-500">
+                                    <i class="fas fa-calendar-times text-4xl mb-4"></i>
+                                    <p>No PTMs scheduled yet</p>
+                                </div>
+                            ` : ptmSchedules.map(ptm => `
+                                <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h4 class="font-bold text-gray-800">${ptm.class} - PTM</h4>
+                                            <p class="text-sm text-gray-600">${ptm.purpose}</p>
+                                            <div class="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                                                <span><i class="fas fa-calendar mr-1"></i>${formatDate(ptm.date)}</span>
+                                                <span><i class="fas fa-clock mr-1"></i>${ptm.startTime} - ${ptm.endTime}</span>
+                                                <span><i class="fas fa-map-marker-alt mr-1"></i>${ptm.location}</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="px-3 py-1 rounded-full text-xs font-semibold ${new Date(ptm.date) >= new Date() ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                                                ${new Date(ptm.date) >= new Date() ? 'Upcoming' : 'Completed'}
+                                            </span>
+                                            <button onclick="editPTM(${ptm.id})" class="text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button onclick="deletePTM(${ptm.id})" class="text-red-600 hover:text-red-800">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function schedulePTM(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const newPTM = {
+                id: ptmSchedules.length + 1,
+                class: formData.get('class'),
+                date: formData.get('date'),
+                startTime: formData.get('startTime'),
+                endTime: formData.get('endTime'),
+                purpose: formData.get('purpose'),
+                location: formData.get('location'),
+                createdAt: new Date().toISOString()
+            };
+            
+            ptmSchedules.push(newPTM);
+            
+            // Show notification modal
+            showPTMNotification(newPTM);
+            
+            event.target.reset();
+            loadPTM();
+        }
+
+        function showPTMNotification(ptm) {
+            document.getElementById('modalTitle').textContent = 'PTM Scheduled Successfully';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="text-center space-y-6">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                        <i class="fas fa-check text-green-600 text-3xl"></i>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">PTM Scheduled!</h3>
+                        <p class="text-gray-600">Parent notifications will be sent automatically</p>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-xl p-4 text-left">
+                        <h4 class="font-semibold text-blue-800 mb-2">Meeting Details:</h4>
+                        <div class="space-y-1 text-sm text-blue-700">
+                            <p><strong>Class:</strong> ${ptm.class}</p>
+                            <p><strong>Date:</strong> ${formatDate(ptm.date)}</p>
+                            <p><strong>Time:</strong> ${ptm.startTime} - ${ptm.endTime}</p>
+                            <p><strong>Location:</strong> ${ptm.location}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-yellow-50 rounded-xl p-4">
+                        <div class="flex items-center space-x-2 text-yellow-800">
+                            <i class="fas fa-bell"></i>
+                            <span class="font-semibold">Notification Status:</span>
+                        </div>
+                        <p class="text-sm text-yellow-700 mt-1">
+                            SMS and email notifications sent to ${studentsData[ptm.class]?.length || 0} parents
+                        </p>
+                    </div>
+                    
+                    <button onclick="closeModal()" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">
+                        <i class="fas fa-check mr-2"></i>Done
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        // Notices Management
+        function loadNotices() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="space-y-6">
+                    <!-- Create Notice -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">Create New Notice</h3>
+                        
+                        <form onsubmit="createNotice(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Notice Title</label>
+                                <input type="text" name="title" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500" placeholder="Enter notice title...">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Notice Content</label>
+                                <textarea name="content" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500" placeholder="Write your notice content here..."></textarea>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Recipients</label>
+                                    <select name="recipients" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                        <option value="">Choose Recipients</option>
+                                        <option value="all">All My Classes</option>
+                                        ${teacherData.classes.map(cls => `<option value="${cls}">${cls}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                                    <select name="priority" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                        <option value="normal">Normal</option>
+                                        <option value="high">High</option>
+                                        <option value="urgent">Urgent</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4">
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="sendSMS" class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                                    <span class="text-sm text-gray-700">Send SMS to Parents</span>
+                                </label>
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" name="sendEmail" class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                                    <span class="text-sm text-gray-700">Send Email Notification</span>
+                                </label>
+                            </div>
+                            
+                            <div class="flex justify-end">
+                                <button type="submit" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">
+                                    <i class="fas fa-paper-plane mr-2"></i>Send Notice
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Sent Notices -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">Sent Notices</h3>
+                        
+                        <div id="noticesList" class="space-y-4">
+                            ${noticesData.length === 0 ? `
+                                <div class="text-center py-8 text-gray-500">
+                                    <i class="fas fa-bullhorn text-4xl mb-4"></i>
+                                    <p>No notices sent yet</p>
+                                </div>
+                            ` : noticesData.map(notice => `
+                                <div class="notice-card bg-gray-50 rounded-xl p-4 hover:shadow-md transition-all">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center space-x-2 mb-2">
+                                                <h4 class="font-bold text-gray-800">${notice.title}</h4>
+                                                <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                                                    notice.priority === 'urgent' ? 'bg-red-100 text-red-800' :
+                                                    notice.priority === 'high' ? 'bg-yellow-100 text-yellow-800' :
+                                                    'bg-blue-100 text-blue-800'
+                                                }">
+                                                    ${notice.priority.toUpperCase()}
+                                                </span>
+                                            </div>
+                                            <p class="text-gray-600 mb-3">${notice.content}</p>
+                                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                                <span><i class="fas fa-users mr-1"></i>${notice.recipients}</span>
+                                                <span><i class="fas fa-calendar mr-1"></i>${formatDate(notice.date)}</span>
+                                                <span><i class="fas fa-eye mr-1"></i>${notice.views || 0} views</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center space-x-2 ml-4">
+                                            ${notice.sendSMS ? '<i class="fas fa-sms text-green-600" title="SMS Sent"></i>' : ''}
+                                            ${notice.sendEmail ? '<i class="fas fa-envelope text-blue-600" title="Email Sent"></i>' : ''}
+                                            <button onclick="editNotice(${notice.id})" class="text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button onclick="deleteNotice(${notice.id})" class="text-red-600 hover:text-red-800">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createNotice(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const newNotice = {
+                id: noticesData.length + 1,
+                title: formData.get('title'),
+                content: formData.get('content'),
+                recipients: formData.get('recipients'),
+                priority: formData.get('priority'),
+                sendSMS: formData.has('sendSMS'),
+                sendEmail: formData.has('sendEmail'),
+                date: new Date().toISOString(),
+                views: 0
+            };
+            
+            noticesData.push(newNotice);
+            
+            // Show success notification
+            showNoticeSuccess(newNotice);
+            
+            event.target.reset();
+            loadNotices();
+        }
+
+        function showNoticeSuccess(notice) {
+            const recipientCount = notice.recipients === 'all' ? 
+                Object.values(studentsData).flat().length : 
+                studentsData[notice.recipients]?.length || 0;
+                
+            document.getElementById('modalTitle').textContent = 'Notice Sent Successfully';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="text-center space-y-6">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                        <i class="fas fa-check text-green-600 text-3xl"></i>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Notice Sent!</h3>
+                        <p class="text-gray-600">Your notice has been delivered to all recipients</p>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-xl p-4 text-left">
+                        <h4 class="font-semibold text-blue-800 mb-2">Notice Details:</h4>
+                        <div class="space-y-1 text-sm text-blue-700">
+                            <p><strong>Title:</strong> ${notice.title}</p>
+                            <p><strong>Recipients:</strong> ${notice.recipients === 'all' ? 'All Classes' : notice.recipients}</p>
+                            <p><strong>Priority:</strong> ${notice.priority.toUpperCase()}</p>
+                            <p><strong>Students Notified:</strong> ${recipientCount}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-green-50 rounded-xl p-4">
+                        <div class="flex items-center space-x-2 text-green-800">
+                            <i class="fas fa-paper-plane"></i>
+                            <span class="font-semibold">Delivery Status:</span>
+                        </div>
+                        <div class="text-sm text-green-700 mt-1 space-y-1">
+                            ${notice.sendSMS ? '<p>✓ SMS notifications sent to parents</p>' : ''}
+                            ${notice.sendEmail ? '<p>✓ Email notifications sent to parents</p>' : ''}
+                            <p>✓ Notice posted on student portal</p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="closeModal()" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">
+                        <i class="fas fa-check mr-2"></i>Done
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        // Profile Management
+        function loadProfile() {
+            document.getElementById('contentArea').innerHTML = `
+                <div class="space-y-6">
+                    <!-- Profile Information -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">My Profile</h3>
+                        
+                        <div class="flex items-start space-x-6">
+                            <div class="w-24 h-24 gradient-bg rounded-2xl flex items-center justify-center text-white text-3xl font-bold">
+                                PS
+                            </div>
+                            
+                            <div class="flex-1">
+                                <form onsubmit="updateProfile(event)" class="space-y-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                            <input type="text" name="name" value="${teacherData.name}" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                            <input type="text" name="subject" value="${teacherData.subject}" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                            <input type="email" name="email" value="${teacherData.email}" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                            <input type="tel" name="phone" value="${teacherData.phone}" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Classes Assigned</label>
+                                        <input type="text" name="classes" value="${teacherData.classes.join(', ')}" readonly class="w-full px-4 py-2 border border-gray-300 rounded-xl bg-gray-50">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Class Teacher Of</label>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="text" name="classTeacher" value="${teacherData.classTeacherOf}" readonly class="flex-1 px-4 py-2 border border-gray-300 rounded-xl bg-gray-50">
+                                            <span class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-xl text-sm font-semibold">
+                                                <i class="fas fa-star mr-1"></i>Main Class
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <button type="submit" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">
+                                            <i class="fas fa-save mr-2"></i>Update Profile
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Change Password -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">Change Password</h3>
+                        
+                        <form onsubmit="changePassword(event)" class="space-y-4 max-w-md">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                                <input type="password" name="currentPassword" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                                <input type="password" name="newPassword" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                                <input type="password" name="confirmPassword" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            
+                            <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-xl hover:bg-red-700 transition-all">
+                                <i class="fas fa-key mr-2"></i>Change Password
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateProfile(event) {
+            event.preventDefault();
+            alert('Profile updated successfully!');
+        }
+
+        function changePassword(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            if (formData.get('newPassword') !== formData.get('confirmPassword')) {
+                alert('New passwords do not match!');
+                return;
+            }
+            
+            alert('Password changed successfully!');
+            event.target.reset();
+        }
+
+        // Modal Functions
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        // Helper Functions
+        function viewResults(className, examType) {
+            alert(`Viewing results for ${className} - ${examType}`);
+        }
+
+        function editResults(className, examType) {
+            alert(`Editing results for ${className} - ${examType}`);
+        }
+
+        function editPTM(id) {
+            alert(`Editing PTM with ID: ${id}`);
+        }
+
+        function deletePTM(id) {
+            if (confirm('Are you sure you want to delete this PTM?')) {
+                ptmSchedules = ptmSchedules.filter(ptm => ptm.id !== id);
+                loadPTM();
+                alert('PTM deleted successfully!');
+            }
+        }
+
+        function editNotice(id) {
+            alert(`Editing notice with ID: ${id}`);
+        }
+
+        function deleteNotice(id) {
+            if (confirm('Are you sure you want to delete this notice?')) {
+                noticesData = noticesData.filter(notice => notice.id !== id);
+                loadNotices();
+                alert('Notice deleted successfully!');
+            }
+        }
+
+        function filterPTMs(type) {
+            // Implementation for filtering PTMs
+            alert(`Filtering PTMs: ${type}`);
+        }
+
+        function editAttendance(className, date) {
+            showAttendanceForm(className);
+        }
+
+        // Dropdown Functions
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationsDropdown');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            // Close profile dropdown if open
+            if (profileDropdown && !profileDropdown.classList.contains('hidden')) {
+                profileDropdown.classList.add('hidden');
+            }
+            
+            // Toggle notifications dropdown
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+        }
+
+        function toggleProfileMenu() {
+            const dropdown = document.getElementById('profileDropdown');
+            const notificationsDropdown = document.getElementById('notificationsDropdown');
+            
+            // Close notifications dropdown if open
+            if (notificationsDropdown && !notificationsDropdown.classList.contains('hidden')) {
+                notificationsDropdown.classList.add('hidden');
+            }
+            
+            // Toggle profile dropdown
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+        }
+
+        function markAllRead() {
+            // Update notification badge
+            const badge = document.querySelector('.bg-red-500');
+            if (badge) {
+                badge.textContent = '0';
+                badge.classList.add('hidden');
+            }
+            
+            // Update notification dots
+            const dots = document.querySelectorAll('#notificationsDropdown .bg-red-500');
+            dots.forEach(dot => {
+                dot.classList.remove('bg-red-500');
+                dot.classList.add('bg-gray-300');
+            });
+            
+            alert('All notifications marked as read!');
+        }
+
+        function viewAllNotifications() {
+            toggleNotifications();
+            alert('Opening full notifications page...');
+        }
+
+        function showSettings() {
+            toggleProfileMenu();
+            document.getElementById('modalTitle').textContent = 'Settings';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-6">
+                    <div class="space-y-4">
+                        <h4 class="font-semibold text-gray-800">Notification Preferences</h4>
+                        <div class="space-y-3">
+                            <label class="flex items-center justify-between">
+                                <span class="text-gray-700">Email notifications for new PTM requests</span>
+                                <input type="checkbox" checked class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                            </label>
+                            <label class="flex items-center justify-between">
+                                <span class="text-gray-700">SMS alerts for urgent notices</span>
+                                <input type="checkbox" checked class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                            </label>
+                            <label class="flex items-center justify-between">
+                                <span class="text-gray-700">Daily attendance reminders</span>
+                                <input type="checkbox" class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h4 class="font-semibold text-gray-800">Display Preferences</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm text-gray-700 mb-2">Theme</label>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                                    <option>Light Mode</option>
+                                    <option>Dark Mode</option>
+                                    <option>Auto</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-700 mb-2">Language</label>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                                    <option>English</option>
+                                    <option>Hindi</option>
+                                    <option>Regional Language</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-4 pt-4 border-t">
+                        <button onclick="closeModal()" class="px-6 py-2 border border-gray-300 rounded-xl hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button onclick="saveSettings()" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">
+                            Save Settings
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function showHelp() {
+            toggleProfileMenu();
+            document.getElementById('modalTitle').textContent = 'Help & Support';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-blue-50 rounded-xl p-4">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-info-circle text-blue-600 text-xl"></i>
+                            <div>
+                                <h4 class="font-semibold text-blue-800">Need Help?</h4>
+                                <p class="text-sm text-blue-600">We're here to assist you with any questions</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h4 class="font-semibold text-gray-800">Quick Help Topics</h4>
+                        <div class="space-y-2">
+                            <button onclick="showHelpTopic('attendance')" class="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-800">How to mark attendance?</span>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </button>
+                            <button onclick="showHelpTopic('results')" class="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-800">How to upload results?</span>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </button>
+                            <button onclick="showHelpTopic('ptm')" class="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-800">How to schedule PTM?</span>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </button>
+                            <button onclick="showHelpTopic('notices')" class="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-800">How to send notices?</span>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h4 class="font-semibold text-gray-800">Contact Support</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 border border-gray-200 rounded-lg text-center">
+                                <i class="fas fa-phone text-green-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-gray-800">Call Support</p>
+                                <p class="text-sm text-gray-600">1800-123-4567</p>
+                                <p class="text-xs text-gray-500">Mon-Fri, 9 AM - 6 PM</p>
+                            </div>
+                            <div class="p-4 border border-gray-200 rounded-lg text-center">
+                                <i class="fas fa-envelope text-blue-600 text-2xl mb-2"></i>
+                                <p class="font-semibold text-gray-800">Email Support</p>
+                                <p class="text-sm text-gray-600">support@schoolerp.com</p>
+                                <p class="text-xs text-gray-500">Response within 24 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end pt-4 border-t">
+                        <button onclick="closeModal()" class="gradient-bg text-white px-6 py-2 rounded-xl hover:opacity-90">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function saveSettings() {
+            alert('Settings saved successfully!');
+            closeModal();
+        }
+
+        function showHelpTopic(topic) {
+            const topics = {
+                'attendance': 'To mark attendance: 1) Go to Attendance section 2) Select your class 3) Click Present/Absent for each student 4) Save attendance',
+                'results': 'To upload results: 1) Go to Results section 2) Select class and exam type 3) Enter marks for each student 4) Save results',
+                'ptm': 'To schedule PTM: 1) Go to PTM section 2) Fill meeting details 3) Select date and time 4) Send invitations to parents',
+                'notices': 'To send notices: 1) Go to Notices section 2) Write your notice 3) Select recipients 4) Choose delivery method 5) Send notice'
+            };
+            
+            alert(topics[topic] || 'Help information not available for this topic.');
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const notificationsDropdown = document.getElementById('notificationsDropdown');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            // Check if click is outside notifications dropdown
+            if (notificationsDropdown && !notificationsDropdown.classList.contains('hidden')) {
+                const notificationButton = event.target.closest('[onclick="toggleNotifications()"]');
+                const dropdownElement = event.target.closest('#notificationsDropdown');
+                
+                if (!notificationButton && !dropdownElement) {
+                    notificationsDropdown.classList.add('hidden');
+                }
+            }
+            
+            // Check if click is outside profile dropdown
+            if (profileDropdown && !profileDropdown.classList.contains('hidden')) {
+                const profileButton = event.target.closest('[onclick="toggleProfileMenu()"]');
+                const dropdownElement = event.target.closest('#profileDropdown');
+                
+                if (!profileButton && !dropdownElement) {
+                    profileDropdown.classList.add('hidden');
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboard();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'972b6121f1c35ed5',t:'MTc1NTc5MjQwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
